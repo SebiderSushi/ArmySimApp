@@ -1,0 +1,207 @@
+package me.sebi.armysim;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+/**
+ * Created by sebi on 15.06.17.
+ */
+
+public class SetupArmyActivity extends AppCompatActivity {
+
+    private String armyName;
+    private ArrayList<RelativeLayout> ROWS = new ArrayList<>(0);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setup_army);
+
+        Intent intent = getIntent();
+        armyName = intent.getStringExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME);
+
+        if (intent.getBooleanExtra(MainActivity.EXTRA_MESSAGE_ARMY_LOAD, false)) {
+            SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
+            String army = sharedPrefs.getString(armyName, this.getResources().getString(R.string.namelessArmy));
+            loadArmy(army);
+        } else {
+            setTitle(this.getResources().getText(R.string.create) + " (" + armyName + ")");
+            int rowCount = intent.getIntExtra(MainActivity.EXTRA_MESSAGE_ARMY_ROWCOUNT, 1);
+            for (int i = 0; i < rowCount; i++)
+                addRow(null);
+        }
+    }
+
+    public void addRow(View view) {
+        LayoutInflater inflater;
+        inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        ViewGroup rowBox = (ViewGroup) findViewById(R.id.ll_rowBox);
+
+        RelativeLayout row = (RelativeLayout) inflater.inflate(R.layout.element_army_row, null);
+        ROWS.add(row);
+
+        EditText rowNumber = (EditText) row.findViewById(R.id.armyRow_editText_rowNumber);
+        Integer number = ROWS.size();
+        rowNumber.setText(number.toString());
+
+        setTitleRowNumber(number);
+
+        rowBox.addView(row);
+    }
+
+    private void reloadRowNumbers() {
+        for (int i = 0; i < ROWS.size(); i++) {
+            RelativeLayout rowRL = ROWS.get(i); // Finally i've got some RL
+            EditText number = (EditText) rowRL.findViewById(R.id.armyRow_editText_rowNumber);
+            Integer numberInt = i + 1;
+            String numberSring = numberInt.toString();
+            number.setText(numberSring);
+        }
+        setTitleRowNumber(ROWS.size());
+    }
+
+    private void setTitleRowNumber(int number) {
+        setTitle(armyName + this.getResources().getString(R.string.editMode) + " " + number + " "
+                + this.getResources().getString(R.string.row)
+                + ((number != 1) ? this.getResources().getString(R.string.echo_win_plural) : ""));
+    }
+
+    public void deleteRow(View view) {
+        RelativeLayout row = (RelativeLayout) view.getParent().getParent();
+        LinearLayout rowBox = (LinearLayout) row.getParent();
+        rowBox.removeView(row);
+        ROWS.remove(row);
+        reloadRowNumbers();
+    }
+
+    public void moveToRowButton(View view) {
+        RelativeLayout row = (RelativeLayout) view.getParent().getParent();
+        EditText rowNumberView = (EditText) row.findViewById(R.id.armyRow_editText_rowNumber);
+        moveToRow(row, Integer.parseInt(rowNumberView.getText().toString()));
+    }
+
+    private void moveToRow(RelativeLayout row, int targetRow) {
+        LinearLayout rowBox = (LinearLayout) row.getParent();
+
+        targetRow--; //since we count from zero here and from 1 in editText
+
+        if (targetRow >= (0 - ROWS.size()) && targetRow < ROWS.size() && targetRow != 0) {
+            if (targetRow < 0)
+                targetRow += ROWS.size();
+            else if (targetRow >= ROWS.size())
+                targetRow -= ROWS.size();
+            ROWS.remove(row);
+            ROWS.add(targetRow, row);
+
+            rowBox.removeView(row);
+            rowBox.addView(row, targetRow);
+
+            reloadRowNumbers();
+        } else
+            Toast.makeText(getApplicationContext(),
+                    this.getResources().getText(R.string.indexOutOfRange) + Integer.toString(targetRow + 1), Toast.LENGTH_LONG).show();
+
+    }
+
+    private void moveRow(View view, int shift) {
+        RelativeLayout row = (RelativeLayout) view.getParent().getParent();
+        LinearLayout rowBox = (LinearLayout) row.getParent();
+        int number = rowBox.indexOfChild(row);
+        number += shift;
+
+        if (number < 0)
+            number += ROWS.size();
+        else if (number >= ROWS.size())
+            number -= ROWS.size();
+
+        ROWS.remove(row);
+        ROWS.add(number, row);
+
+        rowBox.removeView(row);
+        rowBox.addView(row, number);
+
+        reloadRowNumbers();
+    }
+
+    public void rowUp(View view) {
+        moveRow(view, -1);
+    }
+
+    public void rowDown(View view) {
+        moveRow(view, 1);
+    }
+
+    private void loadArmy(String armyString) {
+        ROWS = new ArrayList<>(0);
+
+        String[] string = armyString.replace("\n", "").split(";");
+
+        setTitle(string[0] + getResources().getString(R.string.editMode));
+
+        for (int i = 1; i < string.length; i++) {
+            addRow(null);
+            RelativeLayout rowRL = ROWS.get(i - 1);
+            EditText attack = (EditText) rowRL.findViewById(R.id.editText_attack);
+            EditText defense = (EditText) rowRL.findViewById(R.id.editText_defense);
+            EditText attackSpeed = (EditText) rowRL.findViewById(R.id.editText_attackSpeed);
+            EditText roundsAfterDeath = (EditText) rowRL.findViewById(R.id.editText_roundsAfterDeath);
+            CheckBox attackWeakest = (CheckBox) rowRL.findViewById(R.id.checkbox_atkWeakest);
+            CheckBox distanceDamage = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceDamage);
+            String[] strings = string[i].split(",");
+            if (strings.length >= 7) {
+                attack.setText(strings[1]);
+                defense.setText(strings[2]);
+                attackSpeed.setText(strings[3]);
+                roundsAfterDeath.setText(strings[4]);
+                attackWeakest.setChecked(strings[5].equals("1"));
+                distanceDamage.setChecked(strings[6].equals("1"));
+            }
+        }
+    }
+
+    private String getArmyString() {
+        String armyString = armyName + ";\n";
+
+        for (int i = 0; i < ROWS.size(); i++) {
+            RelativeLayout row = ROWS.get(i);
+            String attack = ((EditText) row.findViewById(R.id.editText_attack)).getText().toString();
+            String defense = ((EditText) row.findViewById(R.id.editText_defense)).getText().toString();
+            String attackSpeed = ((EditText) row.findViewById(R.id.editText_attackSpeed)).getText().toString();
+            String roundsAfterDeath = ((EditText) row.findViewById(R.id.editText_roundsAfterDeath)).getText().toString();
+            int attackWeakest = ((CheckBox) row.findViewById(R.id.checkbox_atkWeakest)).isChecked() ? 1 : 0;
+            int distanceDamage = ((CheckBox) row.findViewById(R.id.checkbox_DistanceDamage)).isChecked() ? 1 : 0;
+            armyString = "\n" + armyString + (i + 1) + "," + attack + "," + defense + "," + attackSpeed + "," + roundsAfterDeath + "," + attackWeakest + "," + distanceDamage + ";";
+        }
+
+        return armyString;
+    }
+
+    public void saveArmy(View view) {
+        SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString(armyName, getArmyString());
+        if (editor.commit()) {
+            Toast toast = Toast.makeText(this, armyName + this.getResources().getString(R.string.toast_saved), Toast.LENGTH_LONG);
+            TextView toastText = (TextView) toast.getView().findViewById(android.R.id.message);
+            if (toastText != null) toastText.setGravity(Gravity.CENTER);
+            toast.show();
+        }
+        finish();
+    }
+}

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/armyRow_ll_attributes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/armyRow_ll_buttons"
+        android:layout_toStartOf="@+id/armyRow_ll_buttons"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/row"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/armyRow_editText_rowNumber"
+                android:layout_width="@dimen/editText_attribute"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="@string/attribute_default_AttackSpeed"
+                android:text="@string/attribute_attack"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editText_attack"
+                android:layout_width="@dimen/editText_attribute"
+                android:layout_height="wrap_content"
+                android:hint="@string/attribute_default_RoundsAfterDeath"
+                android:inputType="numberSigned" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_gravity="center_vertical"
+                android:text="@string/attribute_defense"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editText_defense"
+                android:layout_width="@dimen/editText_attribute"
+                android:layout_height="wrap_content"
+                android:hint="@string/attribute_default_RoundsAfterDeath"
+                android:inputType="numberSigned" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/attribute_attackSpeed"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editText_attackSpeed"
+                android:layout_width="@dimen/editText_attribute"
+                android:layout_height="wrap_content"
+                android:hint="@string/attribute_default_AttackSpeed"
+                android:inputType="numberSigned" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/attribute_roundsAfterDeath"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editText_roundsAfterDeath"
+                android:layout_width="@dimen/editText_attribute"
+                android:layout_height="wrap_content"
+                android:hint="@string/attribute_default_RoundsAfterDeath"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkbox_atkWeakest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/attribute_attackWeakest" />
+
+        <CheckBox
+            android:id="@+id/checkbox_DistanceDamage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/attribute_distanceDamage" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/armyRow_ll_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_moveToRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="moveToRowButton"
+            android:text="@string/button_move_to" />
+
+        <Button
+            android:id="@+id/button_row_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="rowUp"
+            android:text="@string/button_move_up" />
+
+        <Button
+            android:id="@+id/button_row_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="rowDown"
+            android:text="@string/button_move_down" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <Button
+            android:id="@+id/button_deleteRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="deleteRow"
+            android:text="@string/delete" />
+    </LinearLayout>
+</RelativeLayout>
