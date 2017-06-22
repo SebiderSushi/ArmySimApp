@@ -42,6 +42,13 @@
     <string name="echo_win_winInRound">" wins in round "</string>
     <string name="echo_win_w">" with "</string>
     <string name="echo_win_row">" row"</string>
-    <string name="echo_win_plural">"s"</string>
+    <string name="echo_win_plural">s</string>
     <string name="echo_win_left">" left."</string>
+    <string name="error_could_not_get_army">"Error: Could not get this Army!"</string>
+    <string name="export">Export</string>
+    <string name="checkAll">"Check All"</string>
+    <string name="invert">Invert</string>
+    <string name="export_done">"Export done"</string>
+    <string name="export_not_writable">"Storage NOT writable!"</string>
+    <string name="export_could_not_save">" could NOT be saved!"</string>
 </resources>

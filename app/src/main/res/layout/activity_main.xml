@@ -76,18 +76,39 @@
             android:orientation="horizontal">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:onClick="deleteSelectedArmies"
                 android:text="@string/delete" />
 
             <Button
-                android:id="@+id/button_newSimulation"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:onClick="setupSimulation"
-                android:text="@string/button_newSimulation" />
+                android:onClick="exportSelectedArmies"
+                android:text="@string/export" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="checkAllArmies"
+                android:text="@string/checkAll" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="invertChecks"
+                android:text="@string/invert" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button_newSimulation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="setupSimulation"
+            android:text="@string/button_newSimulation" />
     </LinearLayout>
 </RelativeLayout>

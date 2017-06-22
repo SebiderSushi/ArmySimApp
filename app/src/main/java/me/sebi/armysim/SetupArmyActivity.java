@@ -176,7 +176,7 @@ public class SetupArmyActivity extends AppCompatActivity {
     }
 
     private String getArmyString() {
-        String armyString = armyName + ";\n";
+        String armyString = "\n" + armyName + ";";
 
         for (int i = 0; i < ROWS.size(); i++) {
             RelativeLayout row = ROWS.get(i);
@@ -186,7 +186,7 @@ public class SetupArmyActivity extends AppCompatActivity {
             String roundsAfterDeath = ((EditText) row.findViewById(R.id.editText_roundsAfterDeath)).getText().toString();
             int attackWeakest = ((CheckBox) row.findViewById(R.id.checkbox_atkWeakest)).isChecked() ? 1 : 0;
             int distanceDamage = ((CheckBox) row.findViewById(R.id.checkbox_DistanceDamage)).isChecked() ? 1 : 0;
-            armyString = "\n" + armyString + (i + 1) + "," + attack + "," + defense + "," + attackSpeed + "," + roundsAfterDeath + "," + attackWeakest + "," + distanceDamage + ";";
+            armyString = armyString + "\n" + (i + 1) + "," + attack + "," + defense + "," + attackSpeed + "," + roundsAfterDeath + "," + attackWeakest + "," + distanceDamage + ";";
         }
 
         return armyString;

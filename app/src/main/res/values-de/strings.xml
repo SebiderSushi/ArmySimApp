@@ -44,4 +44,11 @@
     <string name="echo_win_row">" übrigen Reihe"</string>
     <string name="echo_win_plural">"n"</string>
     <string name="echo_win_left">"."</string>
+    <string name="error_could_not_get_army">"Fehler: Diese Armee konnte nicht geladen werden!"</string>
+    <string name="export">"Export"</string>
+    <string name="checkAll">"Alle"</string>
+    <string name="invert">"Umkehren"</string>
+    <string name="export_done">"Export abgeschlossen"</string>
+    <string name="export_not_writable">"Speicher NICHT schreibbar!"</string>
+    <string name="export_could_not_save">" konnte NICHT gespeichert werden!"</string>
 </resources>

@@ -42,12 +42,12 @@ public class SetupSimulationActivity extends AppCompatActivity {
         armies = new String[armyNames.size()];
 
         //iterate through armynames and get each armystring from file
-        SharedPreferences prefs_armies = this.getSharedPreferences(MainActivity.NAME_PREFS_ARMIES, Context.MODE_PRIVATE);
+        SharedPreferences prefs_armies = this.getSharedPreferences(MainActivity.PREFERENCES_ARMIES, Context.MODE_PRIVATE);
         for (int i = 0; i < armyNames.size(); i++)
             armies[i] = prefs_armies.getString(armyNames.get(i), this.getResources().getString(R.string.namelessArmy));
 
 
-        SharedPreferences sharedPrefs = this.getSharedPreferences(MainActivity.NAME_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences sharedPrefs = this.getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
         checkbox_andomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
     }
 

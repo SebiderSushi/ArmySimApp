@@ -2,6 +2,7 @@ package me.sebi.armysim;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -26,19 +29,23 @@ public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE_ARMY_LOAD = "me.sebi.armysim.ARMYLOAD";
     public final static String EXTRA_MESSAGE_ARMY_ROWCOUNT = "me.sebi.armysim.ARMYROWCOUNT";
     public final static String KEY_RANDOMNESS = "Randomness";
-    public final static String NAME_PREFS = "me.sebi.armysim.PREFERENCES";
-    public final static String NAME_PREFS_ARMIES = "me.sebi.armysim.ARMIES";
+    public final static String PREFERENCES = "me.sebi.armysim.PREFERENCES";
+    public final static String PREFERENCES_ARMIES = "me.sebi.armysim.ARMIES";
 
     private ListView listView;
+    SharedPreferences prefs, prefs_armies;
+    CheckBox checkbox_randomness;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CheckBox checkbox_randomness = (CheckBox) findViewById(R.id.checkbox_default_randomness);
-        SharedPreferences sharedPrefs = this.getSharedPreferences(NAME_PREFS, Context.MODE_PRIVATE);
-        checkbox_randomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
+        prefs = this.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        prefs_armies = this.getSharedPreferences(PREFERENCES_ARMIES, Context.MODE_PRIVATE);
+        checkbox_randomness = (CheckBox) findViewById(R.id.checkbox_default_randomness);
+
+        checkbox_randomness.setChecked(prefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
 
         refreshListView();
     }
@@ -53,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshListView() {
         ArrayList<String> armyNames_list = new ArrayList<>();
 
-        SharedPreferences sharedPrefs = this.getSharedPreferences(NAME_PREFS_ARMIES, Context.MODE_PRIVATE);
-        Map<String, ?> allEntries = sharedPrefs.getAll();
+        Map<String, ?> allEntries = prefs_armies.getAll();
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
             armyNames_list.add(entry.getKey());
         }
@@ -80,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 // ListView Clicked item value
                 String itemValue = (String) listView.getItemAtPosition(position);
                 // Show Alert
-                Toast.makeText(getApplicationContext(), MainActivity.this.getResources().getText(R.string.editing) + itemValue, Toast.LENGTH_LONG).show();
+                toast(MainActivity.this.getResources().getText(R.string.editing) + itemValue);
 
                 startArmySetup(itemValue, true, -1);
             }
@@ -103,20 +109,35 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (armies.size() == 0) {
-            Toast toast = Toast.makeText(this, this.getResources().getString(R.string.echo_noArmies), Toast.LENGTH_LONG);
-            TextView toastText = (TextView) toast.getView().findViewById(android.R.id.message);
-            if (toastText != null) toastText.setGravity(Gravity.CENTER);
-            toast.show();
-        }
+        if (armies.size() == 0)
+            toast(this.getResources().getString(R.string.echo_noArmies));
         return armies;
     }
 
-    public void saveRandomness(View view) {
-        CheckBox checkbox_randomness = (CheckBox) view;
+    public void checkAllArmies(View view) {
+        ListView lv = (ListView) findViewById(R.id.lv_armies);
+        View v;
+        CheckBox box;
+        for (int i = 0; i < lv.getChildCount(); i++) {
+            v = lv.getChildAt(i);
+            box = (CheckBox) v.findViewById(R.id.checkbox_listViewElem);
+            box.setChecked(true);
+        }
+    }
 
-        SharedPreferences sharedPrefs = this.getSharedPreferences(NAME_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
+    public void invertChecks(View view) {
+        ListView lv = (ListView) findViewById(R.id.lv_armies);
+        View v;
+        CheckBox box;
+        for (int i = 0; i < lv.getChildCount(); i++) {
+            v = lv.getChildAt(i);
+            box = (CheckBox) v.findViewById(R.id.checkbox_listViewElem);
+            box.setChecked(!box.isChecked());
+        }
+    }
+
+    public void saveRandomness(View view) {
+        SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(KEY_RANDOMNESS, checkbox_randomness.isChecked());
         editor.apply();
     }
@@ -136,11 +157,14 @@ public class MainActivity extends AppCompatActivity {
         startArmySetup(name, false, rowCount);
     }
 
+    public void toast(String text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+    }
+
     public void deleteSelectedArmies(View view) {
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() != 0) {
-            SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editPrefs = sharedPrefs.edit();
+            SharedPreferences.Editor editPrefs = prefs_armies.edit();
             for (String army : armies)
                 editPrefs.remove(army);
             editPrefs.apply();
@@ -155,6 +179,40 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE_ARMY_LOAD, load);
         if (rowCount >= 0) intent.putExtra(EXTRA_MESSAGE_ARMY_ROWCOUNT, rowCount);
         startActivity(intent);
+    }
+
+    public void exportSelectedArmies(View view) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) {
+            ArrayList<String> armies = getCheckedArmies();
+            if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
+                String armyText = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest,attackWeakest;";
+                File path = Environment.getExternalStoragePublicDirectory("ArmySim");
+                for (String armyName : armies) {
+                    String saveText = armyText + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
+                    if (!saveTextToFile(new File(path.getAbsolutePath(), armyName + ".txt"), saveText))
+                        toast(armyName + getResources().getString(R.string.export_could_not_save));
+                }
+                toast(getResources().getString(R.string.export_done));
+                refreshListView();
+            }
+        } else {
+            toast(getResources().getString(R.string.export_not_writable));
+        }
+    }
+
+    public boolean saveTextToFile(File path, String text) {
+        try {
+            path.getParentFile().mkdirs();
+            path.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(path);
+            outputStream.write(text.getBytes());
+            outputStream.flush();
+            outputStream.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void setupSimulation(View view) {
