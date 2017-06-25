@@ -8,6 +8,7 @@
     <string name="copy">Kopieren</string>
     <string name="delete">Löschen</string>
     <string name="delete_confirm">"Die folgenden Armeen werden GELÖSCHT:"</string>
+    <string name="delete_confirm_all">"ALLE Armeen werden GELÖSCHT!"</string>
     <string name="cancel">Abbrechen</string>
     <string name="reload">Neu Laden</string>
     <string name="editing">"Bearbeiten: "</string>

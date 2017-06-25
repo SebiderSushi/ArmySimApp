@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     SharedPreferences prefs, prefs_armies;
     CheckBox checkbox_randomness;
+    boolean allChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +106,15 @@ public class MainActivity extends AppCompatActivity {
         View v;
         CheckBox box;
         TextView name;
+        allChecked = true;
         for (int i = 0; i < lv.getChildCount(); i++) {
             v = lv.getChildAt(i);
             box = (CheckBox) v.findViewById(R.id.checkbox_listViewElem);
             if (box.isChecked()) {
                 name = (TextView) v.findViewById(R.id.textView_listViewElem_armyName);
                 armies.add(name.getText().toString());
-            }
+            } else
+                allChecked = false;
         }
 
         if (armies.size() == 0)
@@ -171,9 +174,14 @@ public class MainActivity extends AppCompatActivity {
         if (armies.size() > 0) {
             String cancel = getResources().getString(R.string.cancel);
             String delete = getResources().getString(R.string.delete);
-            String body = getResources().getString(R.string.delete_confirm);
-            for (String army : armies)
-                body = body + "\n" + army;
+            String body = "";
+            if (allChecked) {
+                body = getResources().getString(R.string.delete_confirm_all);
+            } else {
+                body = getResources().getString(R.string.delete_confirm);
+                for (String army : armies)
+                    body = body + "\n" + army;
+            }
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(delete)
@@ -185,8 +193,10 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                     })
-                    .setNegativeButton(cancel, null)
+                    .setNeutralButton(cancel, null)
                     .show();
+            // the neutral button is on the left side in Marshmallow while the negative button would be right beneath 'delete'
+            // therefore using neutral button here to prevent mistyping
         }
     }
 

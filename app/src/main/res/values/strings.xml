@@ -8,6 +8,7 @@
     <string name="copy">Copy</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">"The following armies are going to be DELETED:"</string>
+    <string name="delete_confirm_all">"ALL armies are going to be DELETED!"</string>
     <string name="cancel">Cancel</string>
     <string name="reload">Reload</string>
     <string name="editing">"Editing "</string>
