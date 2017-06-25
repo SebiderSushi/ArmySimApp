@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         editText_name.setText("");
         editText_rowCount.setText("");
 
-        startArmySetup(name, false, rowCount);
+        startArmySetup(name, prefs_armies.contains(name), rowCount);
     }
 
     public void toast(String text) {
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void exportSelectedArmies(View view) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             ArrayList<String> armies = getCheckedArmies();
             if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
                 String armyText = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest,attackWeakest;";

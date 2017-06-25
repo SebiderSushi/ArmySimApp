@@ -22,7 +22,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
 
     private Simulation sim;
     private String[] armies;
-    private CheckBox checkbox_andomness;
+    private CheckBox checkbox_randomness;
     private EditText edit_iterations;
     private LinearLayout echoView;
     private final Counter counter = new Counter();
@@ -35,7 +35,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
 
         echoView = (LinearLayout) findViewById(R.id.echoView);
         edit_iterations = (EditText) findViewById(R.id.editText_sim_iterations);
-        checkbox_andomness = (CheckBox) findViewById(R.id.checkbox_randomness);
+        checkbox_randomness = (CheckBox) findViewById(R.id.checkbox_randomness);
 
         Intent intent = getIntent();
         ArrayList<String> armyNames = intent.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAMES);
@@ -48,7 +48,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
 
 
         SharedPreferences sharedPrefs = this.getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
-        checkbox_andomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
+        checkbox_randomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
     }
 
     private void echo(String color, String text) {
@@ -63,7 +63,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
     public void echoRandomness(View view) {
         echo(this.getResources().getString(R.string.echo_randomness_color),
                 this.getResources().getString(
-                        checkbox_andomness.isChecked() ? R.string.randomness_on : R.string.randomness_off
+                        checkbox_randomness.isChecked() ? R.string.randomness_on : R.string.randomness_off
                 ));
     }
 
@@ -93,7 +93,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
         String str_iterations = edit_iterations.getText().toString();
         int iterations = Integer.parseInt(str_iterations);
         for (int i = 0; i < iterations; i++) {
-            loadSim(armies, checkbox_andomness.isChecked());
+            loadSim(armies, checkbox_randomness.isChecked());
             sim.simulate();
         }
     }
