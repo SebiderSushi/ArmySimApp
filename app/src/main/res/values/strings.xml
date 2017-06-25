@@ -5,6 +5,7 @@
     <string name="initialRowCount">Rows:</string>
     <string name="initialRowCount_default">1</string>
     <string name="create">Create</string>
+    <string name="copy">Copy</string>
     <string name="delete">Delete</string>
     <string name="delete_confirm">"The following armies are going to be DELETED:"</string>
     <string name="cancel">Cancel</string>
@@ -51,4 +52,5 @@
     <string name="export_not_writable">"Storage NOT writable!"</string>
     <string name="export_could_not_save">" could NOT be saved!"</string>
     <string name="share">Share</string>
+    <string name="copied_to_clipboard">Selected Armies copied to clipboard</string>
 </resources>

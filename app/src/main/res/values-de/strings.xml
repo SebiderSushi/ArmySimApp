@@ -5,6 +5,7 @@
     <string name="initialRowCount">Reihen:</string>
     <string name="initialRowCount_default">1</string>
     <string name="create">Erstellen</string>
+    <string name="copy">Kopieren</string>
     <string name="delete">Löschen</string>
     <string name="delete_confirm">"Die folgenden Armeen werden GELÖSCHT:"</string>
     <string name="cancel">Abbrechen</string>
@@ -51,4 +52,5 @@
     <string name="export_not_writable">"Speicher NICHT schreibbar!"</string>
     <string name="export_could_not_save">" konnte NICHT gespeichert werden!"</string>
     <string name="share">Teilen</string>
+    <string name="copied_to_clipboard">Ausgewählte Armeen in Zwischenablage kopiert</string>
 </resources>

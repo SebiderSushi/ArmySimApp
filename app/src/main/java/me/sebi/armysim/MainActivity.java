@@ -1,6 +1,8 @@
 package me.sebi.armysim;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -208,13 +210,30 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void shareSelectedArmies(View view) {
-        String saveText = saveTextHead;
+    private String selectedArmiesToString() {
+        String armyString = saveTextHead;
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
             for (String armyName : armies)
-                saveText = saveText + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
+                armyString = armyString + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
+            return armyString;
+        }
+        return null;
+    }
 
+    public void copySelectedArmies(View view) {
+        String saveText = selectedArmiesToString();
+        if (saveText != null) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", saveText);
+            clipboard.setPrimaryClip(clip);
+            toast(getResources().getString(R.string.copied_to_clipboard));
+        }
+    }
+
+    public void shareSelectedArmies(View view) {
+        String saveText = selectedArmiesToString();
+        if (saveText != null) {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT, saveText);
