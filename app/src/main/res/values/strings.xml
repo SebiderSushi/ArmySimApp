@@ -6,6 +6,7 @@
     <string name="initialRowCount_default">1</string>
     <string name="create">Create</string>
     <string name="delete">Delete</string>
+    <string name="delete_confirm">"The following armies are going to be DELETED:"</string>
     <string name="cancel">Cancel</string>
     <string name="reload">Reload</string>
     <string name="editing">"Editing "</string>
@@ -15,8 +16,6 @@
     <string name="button_move_up">Up</string>
     <string name="button_move_down">Down</string>
     <string name="button_move_to">Move to</string>
-    <string name="deleteConfirm1">"Are you sure you want to delete "</string>
-    <string name="deleteConfirm2">"?"</string>
     <string name="namelessArmy">Nameless Army</string>
     <string name="toast_saved">" saved"</string>
     <string name="button_saveArmy">Save Army</string>

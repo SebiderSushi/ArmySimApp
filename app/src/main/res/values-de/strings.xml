@@ -6,6 +6,7 @@
     <string name="initialRowCount_default">1</string>
     <string name="create">Erstellen</string>
     <string name="delete">Löschen</string>
+    <string name="delete_confirm">"Die folgenden Armeen werden GELÖSCHT:"</string>
     <string name="cancel">Abbrechen</string>
     <string name="reload">Neu Laden</string>
     <string name="editing">"Bearbeiten: "</string>
@@ -15,8 +16,6 @@
     <string name="button_move_up">Auf</string>
     <string name="button_move_down">Ab</string>
     <string name="button_move_to">Nach</string>
-    <string name="deleteConfirm1">"Bist Du sicher, dass Du "</string>
-    <string name="deleteConfirm2">" löschen willst?"</string>
     <string name="namelessArmy">Namenlose Armee</string>
     <string name="toast_saved">" gespeichert"</string>
     <string name="button_saveArmy">Speichern</string>

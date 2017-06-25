@@ -1,6 +1,8 @@
 package me.sebi.armysim;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -162,7 +164,31 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
-    public void deleteSelectedArmies(View view) {
+    public void deleteButton(View view) {
+        ArrayList<String> armies = getCheckedArmies();
+        if (armies.size() > 0) {
+            String cancel = getResources().getString(R.string.cancel);
+            String delete = getResources().getString(R.string.delete);
+            String body = getResources().getString(R.string.delete_confirm);
+            for (String army : armies)
+                body = body + "\n" + army;
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(delete)
+                    .setMessage(body)
+                    .setPositiveButton(delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteSelectedArmies();
+                        }
+
+                    })
+                    .setNegativeButton(cancel, null)
+                    .show();
+        }
+    }
+
+    public void deleteSelectedArmies() {
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() != 0) {
             SharedPreferences.Editor editPrefs = prefs_armies.edit();
@@ -188,13 +214,13 @@ public class MainActivity extends AppCompatActivity {
         if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
             for (String armyName : armies)
                 saveText = saveText + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
-        }
 
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, saveText);
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, saveText);
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+        }
     }
 
     public void exportSelectedArmies(View view) {
