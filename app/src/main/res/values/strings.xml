@@ -51,4 +51,5 @@
     <string name="export_done">"Export done"</string>
     <string name="export_not_writable">"Storage NOT writable!"</string>
     <string name="export_could_not_save">" could NOT be saved!"</string>
+    <string name="share">Share</string>
 </resources>

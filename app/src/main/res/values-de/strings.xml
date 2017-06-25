@@ -51,4 +51,5 @@
     <string name="export_done">"Export abgeschlossen"</string>
     <string name="export_not_writable">"Speicher NICHT schreibbar!"</string>
     <string name="export_could_not_save">" konnte NICHT gespeichert werden!"</string>
+    <string name="share">Teilen</string>
 </resources>

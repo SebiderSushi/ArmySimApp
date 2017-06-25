@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public final static String KEY_RANDOMNESS = "Randomness";
     public final static String PREFERENCES = "me.sebi.armysim.PREFERENCES";
     public final static String PREFERENCES_ARMIES = "me.sebi.armysim.ARMIES";
+    public final String saveTextHead = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest;";
 
     private ListView listView;
     SharedPreferences prefs, prefs_armies;
@@ -181,14 +182,28 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void shareSelectedArmies(View view) {
+        String saveText = saveTextHead;
+        ArrayList<String> armies = getCheckedArmies();
+        if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
+            for (String armyName : armies)
+                saveText = saveText + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
+        }
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, saveText);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
     public void exportSelectedArmies(View view) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             ArrayList<String> armies = getCheckedArmies();
             if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
-                String armyText = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest,attackWeakest;";
                 File path = Environment.getExternalStoragePublicDirectory("ArmySim");
                 for (String armyName : armies) {
-                    String saveText = armyText + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
+                    String saveText = saveTextHead + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
                     if (!saveTextToFile(new File(path.getAbsolutePath(), armyName + ".txt"), saveText))
                         toast(armyName + getResources().getString(R.string.export_could_not_save));
                 }
