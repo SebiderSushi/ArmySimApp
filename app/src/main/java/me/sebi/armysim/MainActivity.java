@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,10 +31,12 @@ public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE_ARMY_NAMES = "me.sebi.armysim.ARMIES";
     public final static String EXTRA_MESSAGE_ARMY_LOAD = "me.sebi.armysim.ARMYLOAD";
     public final static String EXTRA_MESSAGE_ARMY_ROWCOUNT = "me.sebi.armysim.ARMYROWCOUNT";
+    public final static String EXTRA_MESSAGE_ARMY_STRING = "me.sebi.armysim.ARMYSTRING";
+    public final static String EXTRA_MESSAGE_ARMY_STRING_LOAD = "me.sebi.armysim.ARMYSTRINGLOAD";
     public final static String KEY_RANDOMNESS = "Randomness";
     public final static String PREFERENCES = "me.sebi.armysim.PREFERENCES";
     public final static String PREFERENCES_ARMIES = "me.sebi.armysim.ARMIES";
-    public final String saveTextHead = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest;";
+    public final static String saveTextHead = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest;";
 
     private ListView listView;
     SharedPreferences prefs, prefs_armies;

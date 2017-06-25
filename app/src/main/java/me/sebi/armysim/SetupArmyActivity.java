@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ import java.util.ArrayList;
 public class SetupArmyActivity extends AppCompatActivity {
 
     private String armyName;
+    private SharedPreferences sharedPrefs;
     private ArrayList<RelativeLayout> ROWS = new ArrayList<>(0);
 
     @Override
@@ -32,12 +31,16 @@ public class SetupArmyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_army);
 
+        sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
+
         Intent intent = getIntent();
         armyName = intent.getStringExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME);
 
         if (intent.getBooleanExtra(MainActivity.EXTRA_MESSAGE_ARMY_LOAD, false)) {
-            SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
             String army = sharedPrefs.getString(armyName, this.getResources().getString(R.string.namelessArmy));
+            loadArmy(army);
+        } else if (intent.getBooleanExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING_LOAD, false)) {
+            String army = intent.getStringExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING);
             loadArmy(army);
         } else {
             setTitle(this.getResources().getText(R.string.create) + " (" + armyName + ")");
@@ -45,6 +48,10 @@ public class SetupArmyActivity extends AppCompatActivity {
             for (int i = 0; i < rowCount; i++)
                 addRow(null);
         }
+    }
+
+    public void toast(String text) {
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     public void addRow(View view) {
@@ -99,7 +106,7 @@ public class SetupArmyActivity extends AppCompatActivity {
     private void moveToRow(RelativeLayout row, int targetRow) {
         LinearLayout rowBox = (LinearLayout) row.getParent();
 
-        targetRow--; //since we count from zero here and from 1 in editText
+        targetRow--; //since we count from zero here and from 1 in editText_armyString
 
         if (targetRow >= (0 - ROWS.size()) && targetRow < ROWS.size() && targetRow != 0) {
             if (targetRow < 0)
@@ -192,16 +199,32 @@ public class SetupArmyActivity extends AppCompatActivity {
         return armyString;
     }
 
-    public void saveArmy(View view) {
+    public void saveButton(View view) {
+        saveArmy();
+    }
+
+    public void saveExitButton(View view) {
+        saveArmy();
+        finish();
+    }
+
+    private void saveArmy() {
         SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(armyName, getArmyString());
         if (editor.commit()) {
-            Toast toast = Toast.makeText(this, armyName + this.getResources().getString(R.string.toast_saved), Toast.LENGTH_LONG);
-            TextView toastText = (TextView) toast.getView().findViewById(android.R.id.message);
-            if (toastText != null) toastText.setGravity(Gravity.CENTER);
-            toast.show();
+            toast(armyName + getResources().getString(R.string.toast_saved));
+        } else {
+            toast(armyName + getResources().getString(R.string.toast_save_failed));
         }
+    }
+
+    public void switchToTextMode(View view) {
+        String armyString = getArmyString();
+        Intent intent = new Intent(this, SetupArmyStringActivity.class);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING, armyString);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME, armyName);
+        startActivity(intent);
         finish();
     }
 }

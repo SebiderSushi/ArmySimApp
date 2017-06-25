@@ -16,21 +16,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="addRow"
-            android:text="@string/button_addRow" />
+            android:onClick="switchToGUIMode"
+            android:text="@string/editor" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="switchToTextMode"
-            android:text="@string/text" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="saveButton"
+            android:onClick="saveArmyButton"
             android:text="@string/button_saveArmy" />
 
         <Button
@@ -53,9 +46,21 @@
         android:layout_alignParentTop="true">
 
         <LinearLayout
-            android:id="@+id/ll_rowBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/editText_armyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/editText_armyString"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine" />
+        </LinearLayout>
     </ScrollView>
 </RelativeLayout>
