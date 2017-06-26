@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 public class SetupSimulationActivity extends AppCompatActivity {
 
-    private Simulation sim;
     private String[] armies;
     private CheckBox checkbox_randomness;
     private EditText edit_iterations;
@@ -67,8 +66,8 @@ public class SetupSimulationActivity extends AppCompatActivity {
                 ));
     }
 
-    private void loadSim(String[] armies, boolean useRandom) {
-        sim = new Simulation(useRandom, counter, this, echoView);
+    private Simulation loadSim(String[] armies, boolean useRandom) {
+        Simulation sim = new Simulation(useRandom, counter, this, echoView);
         //iterate through armystrings
         for (String armyString : armies) {
             String[] armyRows = armyString.replace("\n", "").split(";");
@@ -78,22 +77,25 @@ public class SetupSimulationActivity extends AppCompatActivity {
             //iterate through rows
             for (int i = 1; i < armyRows.length; i++) {
                 String[] attributes = armyRows[i].split(",");
-                army.rows.add(new Row(
-                        (attributes[1].equals("")) ? 0 : Integer.parseInt(attributes[1]),
-                        (attributes[2].equals("")) ? 0 : Integer.parseInt(attributes[2]),
-                        (attributes[3].equals("")) ? 0 : Integer.parseInt(attributes[3]),
-                        (attributes[4].equals("")) ? 0 : Integer.parseInt(attributes[4]),
-                        attributes[5].equals("1"),
-                        attributes[6].equals("1")));
+                if (attributes.length >= 7) {
+                    army.rows.add(new Row(
+                            (attributes[1].equals("")) ? 0 : Integer.parseInt(attributes[1]),
+                            (attributes[2].equals("")) ? 0 : Integer.parseInt(attributes[2]),
+                            (attributes[3].equals("")) ? 0 : Integer.parseInt(attributes[3]),
+                            (attributes[4].equals("")) ? 0 : Integer.parseInt(attributes[4]),
+                            attributes[5].equals("1"),
+                            attributes[6].equals("1")));
+                }
             }
         }
+        return sim;
     }
 
     public void startSimulation(View view) {
         String str_iterations = edit_iterations.getText().toString();
         int iterations = Integer.parseInt(str_iterations);
         for (int i = 0; i < iterations; i++) {
-            loadSim(armies, checkbox_randomness.isChecked());
+            Simulation sim = loadSim(armies, checkbox_randomness.isChecked());
             sim.simulate();
         }
     }

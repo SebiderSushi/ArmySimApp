@@ -1,6 +1,7 @@
 package me.sebi.armysim;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ class Simulation {
     private final Counter counter;
     final boolean useRandom;
     private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+    ArrayList<ArrayList<Army>> sortedArmies;
 
     Simulation(boolean useRandom, Counter counter, Context echoContext, LinearLayout echoView) {
         this.useRandom = useRandom;
@@ -85,6 +88,7 @@ class Simulation {
             return;
         }
         int round = 0;
+        //Remove Rows already defined with 0 LP
         for (Army army : armies_copy)
             army.rmDead(round);
         if (!stillRunning(round))
@@ -95,7 +99,7 @@ class Simulation {
             //When a group of peers haz attaqzt, les deads be colektid.
             //this way the best armies attack first and equal armies attack
             //each other simultaneously
-            ArrayList<ArrayList<Army>> sortedArmies = this.armiesSortedBySpeed();
+            sortedArmies = this.armiesSortedBySpeed();
             for (ArrayList<Army> attackingArmies : sortedArmies) {
                 for (Army attacker : attackingArmies)
                     for (ArrayList<Army> enemyArmies : sortedArmies)

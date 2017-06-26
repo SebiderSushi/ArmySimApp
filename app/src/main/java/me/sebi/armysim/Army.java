@@ -31,9 +31,12 @@ public class Army {
             this.rows.remove(deadRow);
         if (this.rows.size() == 0) {
             this.containingSimulation.armies.remove(this);
+            for (ArrayList<Army> armies : this.containingSimulation.sortedArmies)
+                armies.remove(this);
         }
     }
 
+    //TODO return only row w/ lives > 0
     private Row weakestRow() {
         int weakestNess = this.rows.get(0).lives;
         int weakestI = 0;
