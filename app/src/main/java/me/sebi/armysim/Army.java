@@ -40,11 +40,13 @@ public class Army {
     private Row weakestRow() {
         int weakestNess = this.rows.get(0).lives;
         int weakestI = 0;
-        for (int i = 0; i < this.rows.size(); i++)
-            if (this.rows.get(i).lives < weakestNess) {
+        for (int i = 0; i < this.rows.size(); i++) {
+            int lives = this.rows.get(i).lives;
+            if (0 < lives && lives < weakestNess) {
                 weakestI = i;
-                weakestNess = this.rows.get(i).lives;
+                weakestNess = lives;
             }
+        }
         return this.rows.get(weakestI);
     }
 
