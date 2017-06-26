@@ -106,7 +106,9 @@ public class SetupArmyActivity extends AppCompatActivity {
     }
 
     private void moveToRow(RelativeLayout row, int targetRow) {
+        EditText et_rowNumber = (EditText) row.findViewById(R.id.armyRow_editText_rowNumber);
         LinearLayout rowBox = (LinearLayout) row.getParent();
+        ScrollView sv = (ScrollView) rowBox.getParent();
 
         targetRow--; //since we count from zero here and from 1 in editText_armyString
 
@@ -122,6 +124,8 @@ public class SetupArmyActivity extends AppCompatActivity {
             rowBox.addView(row, targetRow);
 
             reloadRowNumbers();
+            sv.scrollTo(0, targetRow * row.getHeight());
+            et_rowNumber.requestFocus();
         } else
             Toast.makeText(getApplicationContext(),
                     this.getResources().getText(R.string.indexOutOfRange) + Integer.toString(targetRow + 1), Toast.LENGTH_LONG).show();
@@ -131,12 +135,20 @@ public class SetupArmyActivity extends AppCompatActivity {
     private void moveRow(View view, int shift) {
         RelativeLayout row = (RelativeLayout) view.getParent().getParent();
         LinearLayout rowBox = (LinearLayout) row.getParent();
+        ScrollView sv = (ScrollView) rowBox.getParent();
+
+        int rowHeight = row.getHeight();
+        int rowBoxHeight = rowBox.getHeight(); //since rowBox is the only child of the ScrollView they share heights
+        int y = sv.getScrollY() + shift * rowHeight;
         int number = rowBox.indexOfChild(row) + shift;
 
-        if (number < 0)
+        if (number < 0) {
             number += ROWS.size();
-        else if (number >= ROWS.size())
+            y += rowBoxHeight;
+        } else if (number >= ROWS.size()) {
             number -= ROWS.size();
+            y -= rowBoxHeight;
+        }
 
         ROWS.remove(row);
         ROWS.add(number, row);
@@ -145,6 +157,7 @@ public class SetupArmyActivity extends AppCompatActivity {
         rowBox.addView(row, number);
 
         reloadRowNumbers();
+        sv.scrollTo(0, y);
     }
 
     public void rowUp(View view) {
