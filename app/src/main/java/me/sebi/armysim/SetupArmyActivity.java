@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 /**
@@ -224,7 +223,7 @@ public class SetupArmyActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SetupArmyStringActivity.class);
         intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING, armyString);
         intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME, armyName);
-        startActivity(intent);
         finish();
+        startActivity(intent);
     }
 }

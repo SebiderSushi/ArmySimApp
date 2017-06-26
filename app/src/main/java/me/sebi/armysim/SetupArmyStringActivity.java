@@ -46,8 +46,8 @@ public class SetupArmyStringActivity extends AppCompatActivity {
         intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING, getArmyString());
         intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME, armyName);
         intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING_LOAD, true);
-        startActivity(intent);
         finish();
+        startActivity(intent);
     }
 
     private String getArmyString() {
