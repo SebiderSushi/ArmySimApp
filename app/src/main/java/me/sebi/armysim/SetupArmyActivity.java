@@ -77,6 +77,7 @@ public class SetupArmyActivity extends AppCompatActivity {
             EditText number = (EditText) rowRL.findViewById(R.id.armyRow_editText_rowNumber);
             Integer numberInt = i + 1;
             String numberSring = numberInt.toString();
+            // alternative to permanently not focusable number.clearFocus();
             number.setText(numberSring);
         }
         setTitleRowNumber(ROWS.size());
