@@ -32,6 +32,8 @@ class Simulation {
         TextView echo = new TextView(echoContext);
         echo.setText(text);
         echo.setLayoutParams(echoParams);
+        if (echoView.getChildCount() >= 1000)
+            echoView.removeViewAt(999);
         echoView.addView(echo, 0);
     }
 

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -58,6 +59,8 @@ public class SetupSimulationActivity extends AppCompatActivity {
         if (color != null)
             echo.setTextColor(Color.parseColor(color));
         echo.setLayoutParams(echoParams);
+        if (echoView.getChildCount() >= 1000)
+            echoView.removeViewAt(999);
         echoView.addView(echo, 0);
     }
 
@@ -95,7 +98,9 @@ public class SetupSimulationActivity extends AppCompatActivity {
 
     public void startSimulation(View view) {
         String str_iterations = edit_iterations.getText().toString();
-        int iterations = Integer.parseInt(str_iterations);
+        int iterations = 1;
+        if (!str_iterations.equals(""))
+            iterations = Integer.parseInt(str_iterations);
         for (int i = 0; i < iterations; i++) {
             Simulation sim = loadSim(armies, checkbox_randomness.isChecked());
             sim.simulate();
