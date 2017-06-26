@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 public class SetupSimulationActivity extends AppCompatActivity {
 
+    ArrayList<String> armyNames;
     private String[] armies;
     private CheckBox checkbox_randomness;
     private EditText edit_iterations;
@@ -37,7 +39,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
         checkbox_randomness = (CheckBox) findViewById(R.id.checkbox_randomness);
 
         Intent intent = getIntent();
-        ArrayList<String> armyNames = intent.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAMES);
+        armyNames = intent.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAMES);
         armies = new String[armyNames.size()];
 
         //iterate through armynames and get each armystring from file
@@ -50,7 +52,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
         checkbox_randomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
     }
 
-    private void echo(String color, String text) {
+    private void echo(@Nullable String color, String text) {
         TextView echo = new TextView(this);
         echo.setText(text);
         if (color != null)
@@ -98,5 +100,11 @@ public class SetupSimulationActivity extends AppCompatActivity {
             Simulation sim = loadSim(armies, checkbox_randomness.isChecked());
             sim.simulate();
         }
+        String text = getResources().getString(R.string.echo_ties) + counter.ties;
+        for (String armyName : armyNames) {
+            Integer wins = counter.armyWins.get(armyName);
+            text = text + " " + armyName + ": " + ((wins != null) ? wins : "0");
+        }
+        echo(null, text);
     }
 }

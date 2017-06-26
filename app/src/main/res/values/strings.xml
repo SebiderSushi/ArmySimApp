@@ -41,6 +41,7 @@
     <string name="randomness_on">Randomness activated.</string>
     <string name="randomness_off">Randomness deactivated.</string>
     <string name="echo_tie">Tie</string>
+    <string name="echo_ties">"Ties: "</string>
     <string name="echo_noArmies">"No Armies checked."</string>
     <string name="echo_win_winInRound">" wins in round "</string>
     <string name="echo_win_w">" with "</string>
