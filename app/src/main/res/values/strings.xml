@@ -22,7 +22,7 @@
     <string name="toast_saved">" saved"</string>
     <string name="toast_save_failed">": Saving FAILED!"</string>
     <string name="button_saveArmy">Save</string>
-    <string name="button_saveArmy_and_exit">"Save and Exit"</string>
+    <string name="button_saveArmy_and_exit">"Save &amp; Exit"</string>
     <string name="button_newSimulation">"Fight!"</string>
     <string name="button_runSim">Run Simulation</string>
     <string name="button_addRow">Add Row to Army</string>

@@ -22,7 +22,7 @@
     <string name="toast_saved">" gespeichert"</string>
     <string name="toast_save_failed">": Fehler beim Speichern!"</string>
     <string name="button_saveArmy">Speichern</string>
-    <string name="button_saveArmy_and_exit">"Speichern und Verlassen"</string>
+    <string name="button_saveArmy_and_exit">"Speichern &amp; Verlassen"</string>
     <string name="button_newSimulation">"Simulation mit ausgewählten Armeen"</string>
     <string name="button_runSim">Simulation simulieren</string>
     <string name="button_addRow">Reihe hinzufügen</string>
