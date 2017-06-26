@@ -12,7 +12,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 /**
@@ -77,7 +79,7 @@ public class SetupArmyActivity extends AppCompatActivity {
             EditText number = (EditText) rowRL.findViewById(R.id.armyRow_editText_rowNumber);
             Integer numberInt = i + 1;
             String numberSring = numberInt.toString();
-            // alternative to permanently not focusable number.clearFocus();
+            number.clearFocus();
             number.setText(numberSring);
         }
         setTitleRowNumber(ROWS.size());
@@ -129,8 +131,7 @@ public class SetupArmyActivity extends AppCompatActivity {
     private void moveRow(View view, int shift) {
         RelativeLayout row = (RelativeLayout) view.getParent().getParent();
         LinearLayout rowBox = (LinearLayout) row.getParent();
-        int number = rowBox.indexOfChild(row);
-        number += shift;
+        int number = rowBox.indexOfChild(row) + shift;
 
         if (number < 0)
             number += ROWS.size();
