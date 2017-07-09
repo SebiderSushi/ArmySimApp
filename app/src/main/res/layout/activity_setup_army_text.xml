@@ -6,7 +6,7 @@
     tools:context="me.sebi.armysim.SetupArmyActivity">
 
     <LinearLayout
-        android:id="@+id/ll_armySetupButtons"
+        android:id="@+id/armySetup_ll_Buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -35,10 +35,10 @@
     </LinearLayout>
 
     <ScrollView
-        android:id="@+id/scrollView_rowBox"
+        android:id="@+id/armySetup_sv_rowBox"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ll_armySetupButtons"
+        android:layout_above="@+id/armySetup_ll_Buttons"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"

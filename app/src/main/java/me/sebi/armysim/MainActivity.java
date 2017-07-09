@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     public final static String KEY_RANDOMNESS = "Randomness";
     public final static String PREFERENCES = "me.sebi.armysim.PREFERENCES";
     public final static String PREFERENCES_ARMIES = "me.sebi.armysim.ARMIES";
-    public final static String saveTextHead = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest;";
+    public final static String saveTextHead = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest,distanceFighter;";
 
     private ListView listView;
     SharedPreferences prefs, prefs_armies;
@@ -65,14 +65,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshListView() {
-        ArrayList<String> armyNames_list = new ArrayList<>();
-
-        Map<String, ?> allEntries = prefs_armies.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            armyNames_list.add(entry.getKey());
-        }
-
-        Collections.sort(armyNames_list);
+        ArrayList<String> armyNames = getAllArmyNames();
+        Collections.sort(armyNames);
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.lv_armies);
@@ -83,21 +77,37 @@ public class MainActivity extends AppCompatActivity {
         // Third parameter - ID of the TextView to which the data is written
         // Forth - the Array of data
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                R.layout.element_listview_army, R.id.textView_listViewElem_armyName, armyNames_list);
+                R.layout.element_listview_army, R.id.textView_listViewElem_armyName, armyNames);
         // Assign adapter to ListView
         listView.setAdapter(adapter);
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // ListView Clicked item value
-                String itemValue = (String) listView.getItemAtPosition(position);
-                // Show Alert
-                toast(MainActivity.this.getResources().getText(R.string.editing) + itemValue);
-
-                startArmySetup(itemValue, true, -1);
+                String armyName = (String) listView.getItemAtPosition(position);
+                toast(MainActivity.this.getResources().getText(R.string.editing) + armyName);
+                startArmySetup(armyName, true, -1);
             }
         });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String armyName = (String) listView.getItemAtPosition(position);
+                toast("Rename" + armyName);
+                return true;
+            }
+        });
+    }
+
+    private ArrayList<String> getAllArmyNames() {
+        ArrayList<String> armyNames = new ArrayList<>();
+
+        Map<String, ?> allEntries = prefs_armies.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            armyNames.add(entry.getKey());
+        }
+
+        return armyNames;
     }
 
     private ArrayList<String> getCheckedArmies() {
@@ -160,10 +170,10 @@ public class MainActivity extends AppCompatActivity {
         if (!str_rowCount.equals(""))
             rowCount = Integer.parseInt(str_rowCount);
 
+        startArmySetup(name, prefs_armies.contains(name), rowCount);
+
         editText_name.setText("");
         editText_rowCount.setText("");
-
-        startArmySetup(name, prefs_armies.contains(name), rowCount);
     }
 
     public void toast(String text) {
@@ -224,9 +234,11 @@ public class MainActivity extends AppCompatActivity {
     private String selectedArmiesToString() {
         String armyString = saveTextHead;
         ArrayList<String> armies = getCheckedArmies();
-        if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
-            for (String armyName : armies)
-                armyString = armyString + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
+        if (armies.size() > 0) { // '> 0' instead of '!= 0' just in case of undetermined future developments
+            for (String armyName : armies) {
+                //convertArmy(armyName);
+                armyString = armyString + "\n\n" + armyName + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
+            }
             return armyString;
         }
         return null;
@@ -264,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
                         toast(armyName + getResources().getString(R.string.export_could_not_save));
                 }
                 toast(getResources().getString(R.string.export_done));
-                refreshListView();
             }
         } else {
             toast(getResources().getString(R.string.export_not_writable));
@@ -286,7 +297,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setupSimulation(View view) {
+    /*
+    public void convertSelectedArmies(View view) {
+        ArrayList<String> armies = getCheckedArmies();
+        if (armies.size() > 0)
+            for (String army : armies)
+                convertArmy(army);
+    }
+
+    private void convertAllArmies() {
+        ArrayList<String> armies = getAllArmyNames();
+        for (String army : armies)
+            convertArmy(army);
+    }
+
+    private void convertArmy(String armyName) {
+        String armyString = prefs_armies.getString(armyName, "");
+        String[] rowStrings = armyString.replace("\n", "").split(";");
+        String newArmyString = "";
+
+        for (int i = 0; i < rowStrings.length; i++) {
+            String[] attributes = rowStrings[i].split(",");
+            newArmyString = newArmyString + rowStrings[i];
+            for (int c = attributes.length; c < 8; c++)
+                newArmyString = newArmyString + ",";
+            newArmyString = newArmyString + ";" + "\n";
+        }
+        newArmyString = newArmyString.substring(0, newArmyString.length() - 1);
+
+        SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString(armyName, newArmyString);
+        if (!editor.commit()) {
+            toast(armyName + getResources().getString(R.string.toast_save_failed));
+        }
+    }*/
+
+    public void startSimulationSetup(View view) {
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() != 0) {
             Intent intent = new Intent(this, SetupSimulationActivity.class);

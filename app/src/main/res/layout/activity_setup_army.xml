@@ -5,8 +5,30 @@
     android:layout_height="match_parent"
     tools:context="me.sebi.armysim.SetupArmyActivity">
 
+    <EditText
+        android:id="@+id/armySetup_et_armyName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:hint="@string/name"
+        android:inputType="text" />
+
+    <ScrollView
+        android:id="@+id/armySetup_sv_rowBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/armySetup_ll_Buttons"
+        android:layout_below="@+id/armySetup_et_armyName">
+
+        <LinearLayout
+            android:id="@+id/armySetup_ll_rowBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"></LinearLayout>
+    </ScrollView>
+
     <LinearLayout
-        android:id="@+id/ll_armySetupButtons"
+        android:id="@+id/armySetup_ll_Buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -40,22 +62,4 @@
             android:onClick="saveExitButton"
             android:text="@string/button_saveArmy_and_exit" />
     </LinearLayout>
-
-    <ScrollView
-        android:id="@+id/scrollView_rowBox"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/ll_armySetupButtons"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
-
-        <LinearLayout
-            android:id="@+id/ll_rowBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
-    </ScrollView>
 </RelativeLayout>

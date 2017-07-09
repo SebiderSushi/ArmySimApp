@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -123,12 +124,20 @@
                 android:onClick="deleteButton"
                 android:text="@string/delete" />
 
+            <!--Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="convertSelectedArmies"
+                android:text="@string/reSave" /-->
+
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:onClick="setupSimulation"
+                android:onClick="startSimulationSetup"
                 android:text="@string/button_newSimulation" />
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -74,23 +75,25 @@ public class SetupSimulationActivity extends AppCompatActivity {
     private Simulation loadSim(String[] armies, boolean useRandom) {
         Simulation sim = new Simulation(useRandom, counter, this, echoView);
         //iterate through armystrings
-        for (String armyString : armies) {
+        for (int i = 0; i < armies.length; i++) {
+            String armyString = armies[i];
             String[] armyRows = armyString.replace("\n", "").split(";");
             //create army with name and add to simulation
-            Army army = new Army(armyRows[0], sim);
-            sim.armies.add(army);
-            //iterate through rows
-            for (int i = 1; i < armyRows.length; i++) {
-                String[] attributes = armyRows[i].split(",");
-                if (attributes.length >= 7) {
-                    army.rows.add(new Row(
+            Army army = new Army(armyNames.get(i), sim);
+            //iterate through rows and add to army
+            for (String armyRow : armyRows) {
+                String[] attributes = armyRow.split(",");
+                try {
+                    Row row = new Row(
                             (attributes[1].equals("")) ? 0 : Integer.parseInt(attributes[1]),
                             (attributes[2].equals("")) ? 0 : Integer.parseInt(attributes[2]),
                             (attributes[3].equals("")) ? 0 : Integer.parseInt(attributes[3]),
                             (attributes[4].equals("")) ? 0 : Integer.parseInt(attributes[4]),
                             attributes[5].equals("1"),
-                            attributes[6].equals("1")));
-                }
+                            !attributes[6].equals("0"),
+                            attributes[7].equals("1"));
+                    army.addRow(row);
+                } catch (ArrayIndexOutOfBoundsException e) { }
             }
         }
         return sim;

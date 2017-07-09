@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +24,8 @@ import java.util.ArrayList;
 
 public class SetupArmyActivity extends AppCompatActivity {
 
-    private String armyName;
-    private SharedPreferences sharedPrefs;
+    private EditText editText_armyName;
+    private SharedPreferences prefs_armies;
     private ArrayList<RelativeLayout> ROWS = new ArrayList<>(0);
 
     @Override
@@ -32,13 +33,16 @@ public class SetupArmyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_army);
 
-        sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
+        prefs_armies = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
+        editText_armyName = (EditText) findViewById(R.id.armySetup_et_armyName);
 
         Intent intent = getIntent();
-        armyName = intent.getStringExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME);
+        String armyName = intent.getStringExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME);
+        setTitle(armyName + getResources().getString(R.string.editMode));
+        editText_armyName.setText(armyName);
 
         if (intent.getBooleanExtra(MainActivity.EXTRA_MESSAGE_ARMY_LOAD, false)) {
-            String army = sharedPrefs.getString(armyName, this.getResources().getString(R.string.namelessArmy));
+            String army = prefs_armies.getString(armyName, "");
             loadArmy(army);
         } else if (intent.getBooleanExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING_LOAD, false)) {
             String army = intent.getStringExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING);
@@ -55,11 +59,11 @@ public class SetupArmyActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
-    public void addRow(View view) {
+    public void addRow(@Nullable View view) {
         LayoutInflater inflater;
         inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        ViewGroup rowBox = (ViewGroup) findViewById(R.id.ll_rowBox);
+        ViewGroup rowBox = (ViewGroup) findViewById(R.id.armySetup_ll_rowBox);
 
         RelativeLayout row = (RelativeLayout) inflater.inflate(R.layout.element_army_row, null);
         ROWS.add(row);
@@ -86,7 +90,7 @@ public class SetupArmyActivity extends AppCompatActivity {
     }
 
     private void setTitleRowNumber(int number) {
-        setTitle(armyName + this.getResources().getString(R.string.editMode) + " " + number + " "
+        setTitle(getArmyName() + this.getResources().getString(R.string.editMode) + " " + number + " "
                 + this.getResources().getString(R.string.row)
                 + ((number != 1) ? this.getResources().getString(R.string.echo_win_plural) : ""));
     }
@@ -127,8 +131,7 @@ public class SetupArmyActivity extends AppCompatActivity {
             sv.scrollTo(0, targetRow * row.getHeight());
             et_rowNumber.requestFocus();
         } else
-            Toast.makeText(getApplicationContext(),
-                    this.getResources().getText(R.string.indexOutOfRange) + Integer.toString(targetRow + 1), Toast.LENGTH_LONG).show();
+            toast(this.getResources().getText(R.string.indexOutOfRange) + Integer.toString(targetRow + 1));
 
     }
 
@@ -171,33 +174,37 @@ public class SetupArmyActivity extends AppCompatActivity {
     private void loadArmy(String armyString) {
         ROWS = new ArrayList<>(0);
 
-        String[] string = armyString.replace("\n", "").split(";");
+        String[] rowStrings = armyString.replace("\n", "").split(";");
 
-        setTitle(string[0] + getResources().getString(R.string.editMode));
-
-        for (int i = 1; i < string.length; i++) {
+        for (int i = 0; i < rowStrings.length; i++) {
+            String[] attributes = rowStrings[i].split(",");
             addRow(null);
-            RelativeLayout rowRL = ROWS.get(i - 1);
+            RelativeLayout rowRL = ROWS.get(i);
             EditText attack = (EditText) rowRL.findViewById(R.id.editText_attack);
             EditText defense = (EditText) rowRL.findViewById(R.id.editText_defense);
             EditText attackSpeed = (EditText) rowRL.findViewById(R.id.editText_attackSpeed);
             EditText roundsAfterDeath = (EditText) rowRL.findViewById(R.id.editText_roundsAfterDeath);
             CheckBox attackWeakest = (CheckBox) rowRL.findViewById(R.id.checkbox_atkWeakest);
             CheckBox distanceDamage = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceDamage);
-            String[] strings = string[i].split(",");
-            if (strings.length >= 7) {
-                attack.setText(strings[1]);
-                defense.setText(strings[2]);
-                attackSpeed.setText(strings[3]);
-                roundsAfterDeath.setText(strings[4]);
-                attackWeakest.setChecked(strings[5].equals("1"));
-                distanceDamage.setChecked(strings[6].equals("1"));
-            }
+            CheckBox distanceFighter = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceFighter);
+            try {
+                attack.setText(attributes[1]);
+                defense.setText(attributes[2]);
+                attackSpeed.setText(attributes[3]);
+                roundsAfterDeath.setText(attributes[4]);
+                attackWeakest.setChecked(attributes[5].equals("1"));
+                distanceDamage.setChecked(!attributes[6].equals("0"));
+                distanceFighter.setChecked(attributes[7].equals("1"));
+            } catch (ArrayIndexOutOfBoundsException e) { }
         }
     }
 
+    private String getArmyName() {
+        return editText_armyName.getText().toString();
+    }
+
     private String getArmyString() {
-        String armyString = "\n" + armyName + ";";
+        String armyString = "";
 
         for (int i = 0; i < ROWS.size(); i++) {
             RelativeLayout row = ROWS.get(i);
@@ -205,19 +212,21 @@ public class SetupArmyActivity extends AppCompatActivity {
             String defense = ((EditText) row.findViewById(R.id.editText_defense)).getText().toString();
             String attackSpeed = ((EditText) row.findViewById(R.id.editText_attackSpeed)).getText().toString();
             String roundsAfterDeath = ((EditText) row.findViewById(R.id.editText_roundsAfterDeath)).getText().toString();
-            int attackWeakest = ((CheckBox) row.findViewById(R.id.checkbox_atkWeakest)).isChecked() ? 1 : 0;
-            int distanceDamage = ((CheckBox) row.findViewById(R.id.checkbox_DistanceDamage)).isChecked() ? 1 : 0;
-            armyString = armyString + "\n" + (i + 1) + "," + attack + "," + defense + "," + attackSpeed + "," + roundsAfterDeath + "," + attackWeakest + "," + distanceDamage + ";";
+            String attackWeakest = ((CheckBox) row.findViewById(R.id.checkbox_atkWeakest)).isChecked() ? "1" : "0";
+            String distanceDamage = ((CheckBox) row.findViewById(R.id.checkbox_DistanceDamage)).isChecked() ? "1" : "0";
+            String distanceFighter = ((CheckBox) row.findViewById(R.id.checkbox_DistanceFighter)).isChecked() ? "1" : "0";
+            armyString = armyString + (i + 1) + "," + attack + "," + defense + "," + attackSpeed + ","
+                    + roundsAfterDeath + "," + attackWeakest + "," + distanceDamage + "," + distanceFighter + ";" + "\n";
         }
 
-        return armyString;
+        return armyString.substring(0, armyString.length() - 1);
     }
 
-    public void saveButton(View view) {
+    public void saveButton(@Nullable View view) {
         saveArmy();
     }
 
-    public void saveExitButton(View view) {
+    public void saveExitButton(@Nullable View view) {
         saveArmy();
         finish();
     }
@@ -225,6 +234,7 @@ public class SetupArmyActivity extends AppCompatActivity {
     private void saveArmy() {
         SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefs.edit();
+        String armyName = getArmyName();
         editor.putString(armyName, getArmyString());
         if (editor.commit()) {
             toast(armyName + getResources().getString(R.string.toast_saved));
@@ -233,11 +243,10 @@ public class SetupArmyActivity extends AppCompatActivity {
         }
     }
 
-    public void switchToTextMode(View view) {
-        String armyString = getArmyString();
+    public void switchToTextMode(@Nullable View view) {
         Intent intent = new Intent(this, SetupArmyStringActivity.class);
-        intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING, armyString);
-        intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME, armyName);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING, getArmyString());
+        intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME, getArmyName());
         finish();
         startActivity(intent);
     }

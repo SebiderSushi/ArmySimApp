@@ -12,17 +12,19 @@ class Row {
     final int attackSpeed;
     boolean ATTACK_WEAKEST_ROW = false;
     boolean DISTANCE_DAMAGE = true;
+    boolean DISTANCE_FIGHTER = false;
 
     /**
      * The constructor we'll be using in our App
      */
-    Row(int attack, int lives, int attackSpeed, int roundsAfterDeath, boolean ATTACK_WEAKEST_ROW, boolean DISTANCE_DAMAGE) {
+    Row(int attack, int lives, int attackSpeed, int roundsAfterDeath, boolean ATTACK_WEAKEST_ROW, boolean DISTANCE_DAMAGE, boolean DISTANCE_FIGHTER) {
         this.attack = attack;
         this.lives = lives;
         this.attackSpeed = attackSpeed;
         this.roundsAfterDeath = roundsAfterDeath;
         this.ATTACK_WEAKEST_ROW = ATTACK_WEAKEST_ROW;
         this.DISTANCE_DAMAGE = DISTANCE_DAMAGE;
+        this.DISTANCE_FIGHTER = DISTANCE_FIGHTER;
     }
 
     /*

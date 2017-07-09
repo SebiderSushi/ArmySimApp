@@ -8,12 +8,20 @@ import java.util.ArrayList;
 public class Army {
 
     final ArrayList<Row> rows = new ArrayList<>();
+    private final ArrayList<Row> distanceFighterRows = new ArrayList<>();
     final String name;
     private final Simulation containingSimulation;
 
     Army(String name, Simulation containingSimulation) {
         this.name = name;
         this.containingSimulation = containingSimulation;
+        this.containingSimulation.armies.add(this);
+    }
+
+    void addRow(Row row) {
+        if (row.DISTANCE_FIGHTER)
+            this.distanceFighterRows.add(row);
+        this.rows.add(row);
     }
 
     void rmDead(int round) {
@@ -27,8 +35,10 @@ public class Army {
                         deadRows.add(row);
                 } else deadRows.add(row);
         }
-        for (Row deadRow : deadRows)
+        for (Row deadRow : deadRows) {
             this.rows.remove(deadRow);
+            this.distanceFighterRows.remove(deadRow);
+        }
         if (this.rows.size() == 0) {
             this.containingSimulation.armies.remove(this);
             for (ArrayList<Army> armies : this.containingSimulation.sortedArmies)
@@ -36,7 +46,6 @@ public class Army {
         }
     }
 
-    //TODO return only row w/ lives > 0
     private Row weakestRow() {
         int weakestNess = this.rows.get(0).lives;
         int weakestI = 0;
@@ -51,14 +60,15 @@ public class Army {
     }
 
     void attack(Army enemy) {
-        Row attackRow = this.rows.get(0).ATTACK_WEAKEST_ROW ? enemy.weakestRow() : enemy.rows.get(0);
-        int aAtk = this.rows.get(0).attack + (attackRow.DISTANCE_DAMAGE && this.rows.size() > 1 ? this.rows.get(this.rows.size() - 1).attack : 0);
-        int bDef = attackRow.lives;
+        Row attackedRow = this.rows.get(0).ATTACK_WEAKEST_ROW ? enemy.weakestRow() : enemy.rows.get(0);
+        int aAtk = this.rows.get(0).attack;
+        for (Row distanceFighter : distanceFighterRows)
+            aAtk += attackedRow.DISTANCE_DAMAGE ? distanceFighter.attack : 0;
+        int bDef = attackedRow.lives;
         if (this.containingSimulation.useRandom) {
             aAtk *= 1 + 0.5 * Math.random();
             bDef *= 1 + 0.5 * Math.random();
         }
-        attackRow.lives = bDef - aAtk;
+        attackedRow.lives = bDef - aAtk;
     }
-
 }

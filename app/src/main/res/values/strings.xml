@@ -1,9 +1,9 @@
 <resources>
-    <string name="echo_randomness_color">#c9000a</string>
-    <string name="app_name">ArmySim</string>
+    <string name="echo_randomness_color" translatable="false">#c9000a</string>
+    <string name="app_name" translatable="false">ArmySim</string>
     <string name="armyName">Name:</string>
     <string name="initialRowCount">Rows:</string>
-    <string name="initialRowCount_default">1</string>
+    <string name="initialRowCount_default" translatable="false">1</string>
     <string name="create">Create</string>
     <string name="copy">Copy</string>
     <string name="delete">Delete</string>
@@ -21,22 +21,24 @@
     <string name="namelessArmy">Nameless Army</string>
     <string name="toast_saved">" saved"</string>
     <string name="toast_save_failed">": Saving FAILED!"</string>
+    <string name="toast_mismatch">" has a wrong format. Army converted?"</string>
     <string name="button_saveArmy">Save</string>
     <string name="button_saveArmy_and_exit">"Save &amp; Exit"</string>
     <string name="button_newSimulation">"Fight!"</string>
     <string name="button_runSim">Run Simulation</string>
-    <string name="button_addRow">Add Row to Army</string>
+    <string name="button_addRow">New Row</string>
     <string name="attribute_attack">Attack:</string>
     <string name="attribute_defense">LP:</string>
     <string name="attribute_roundsAfterDeath">Rounds to survive after Death:</string>
     <string name="attribute_attackSpeed">Attack speed (relative):</string>
-    <string name="attribute_default_RoundsAfterDeath">0</string>
-    <string name="attribute_default_AttackSpeed">0</string>
+    <string name="attribute_default_RoundsAfterDeath" translatable="false">0</string>
+    <string name="attribute_default_AttackSpeed" translatable="false">0</string>
     <string name="attribute_attackWeakest">Attack weakest Row</string>
     <string name="attribute_distanceDamage">Take distance Damage</string>
+    <string name="attribute_distanceFighter">Distance Fighter</string>
     <string name="sim_iterations_text">Number of iterations:</string>
     <string name="sim_iterations_hint">Protip: Long numbers take a long time to simulate</string>
-    <string name="sim_iterations_default">1</string>
+    <string name="sim_iterations_default" translatable="false">1</string>
     <string name="sim_randomness">Use randomness</string>
     <string name="randomness_on">Randomness activated.</string>
     <string name="randomness_off">Randomness deactivated.</string>
@@ -59,4 +61,6 @@
     <string name="copied_to_clipboard">Selected Armies copied to clipboard</string>
     <string name="text">Text</string>
     <string name="editor">Editor</string>
+    <string name="name">Name</string>
+    <string name="reSave">Convert</string>
 </resources>
