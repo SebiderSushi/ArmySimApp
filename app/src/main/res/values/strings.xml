@@ -25,7 +25,7 @@
     <string name="button_saveArmy">Save</string>
     <string name="button_saveArmy_and_exit">"Save &amp; Exit"</string>
     <string name="button_newSimulation">"Fight!"</string>
-    <string name="button_runSim">Run Simulation</string>
+    <string name="button_runSim">Run</string>
     <string name="button_addRow">New Row</string>
     <string name="attribute_attack">Attack:</string>
     <string name="attribute_defense">LP:</string>
@@ -36,10 +36,9 @@
     <string name="attribute_attackWeakest">Attack weakest Row</string>
     <string name="attribute_distanceDamage">Take distance Damage</string>
     <string name="attribute_distanceFighter">Distance Fighter</string>
-    <string name="sim_iterations_text">Number of iterations:</string>
-    <string name="sim_iterations_hint">Protip: Long numbers take a long time to simulate</string>
+    <string name="sim_iterations_text">Iterations:</string>
     <string name="sim_iterations_default" translatable="false">1</string>
-    <string name="sim_randomness">Use randomness</string>
+    <string name="sim_randomness">Randomness</string>
     <string name="randomness_on">Randomness activated.</string>
     <string name="randomness_off">Randomness deactivated.</string>
     <string name="echo_tie">Tie</string>

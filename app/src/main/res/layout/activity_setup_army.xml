@@ -44,21 +44,21 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="0.6"
             android:onClick="switchToTextMode"
             android:text="@string/text" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.05"
             android:onClick="saveButton"
             android:text="@string/button_saveArmy" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.15"
             android:onClick="saveExitButton"
             android:text="@string/button_saveArmy_and_exit" />
     </LinearLayout>

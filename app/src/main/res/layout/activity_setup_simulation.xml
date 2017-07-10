@@ -29,42 +29,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/checkbox_randomness"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="echoRandomness"
-                android:text="@string/sim_randomness" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/tv_iterations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:text="@string/sim_iterations_text" />
 
             <EditText
                 android:id="@+id/editText_sim_iterations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_iterations"
+                android:layout_toEndOf="@+id/tv_iterations"
+                android:layout_toLeftOf="@+id/checkbox_randomness"
+                android:layout_toStartOf="@+id/checkbox_randomness"
                 android:inputType="number"
                 android:text="@string/sim_iterations_default" />
-        </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/sim_iterations_hint" />
+            <CheckBox
+                android:id="@+id/checkbox_randomness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/button_runSim"
+                android:layout_toStartOf="@+id/button_runSim"
+                android:layout_centerVertical="true"
+                android:onClick="echoRandomness"
+                android:text="@string/sim_randomness" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="startSimulation"
-            android:text="@string/button_runSim" />
+            <Button
+                android:id="@+id/button_runSim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:onClick="startSimulation"
+                android:text="@string/button_runSim" />
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

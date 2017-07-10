@@ -20,9 +20,9 @@
     <string name="toast_save_failed">": Fehler beim Speichern!"</string>
     <string name="toast_mismatch">" hat ein falsches Format. Armee konvertiert?"</string>
     <string name="button_saveArmy">Speichern</string>
-    <string name="button_saveArmy_and_exit">"Speichern &amp; Verlassen"</string>
-    <string name="button_newSimulation">"Simulation mit ausgewählten Armeen"</string>
-    <string name="button_runSim">Simulation simulieren</string>
+    <string name="button_saveArmy_and_exit">"Speichern &amp; Schließen"</string>
+    <string name="button_newSimulation">"Simulation"</string>
+    <string name="button_runSim">Start</string>
     <string name="button_addRow">Neue Reihe</string>
     <string name="attribute_attack">Angriff:</string>
     <string name="attribute_defense">LP:</string>
@@ -31,8 +31,7 @@
     <string name="attribute_attackWeakest">Greift schwächste Reihe an</string>
     <string name="attribute_distanceDamage">Erleidet Fernkampfschaden</string>
     <string name="attribute_distanceFighter">Fernkämpfer</string>
-    <string name="sim_iterations_text">Anzahl Wiederholungen:</string>
-    <string name="sim_iterations_hint">Protip: Lange Zahlen brauchen lang zum Simulieren</string>
+    <string name="sim_iterations_text">Wiederholungen:</string>
     <string name="sim_randomness">Zufälligkeit</string>
     <string name="randomness_on">Zufälligkeit aktiviert.</string>
     <string name="randomness_off">Zufälligkeit deaktiviert.</string>
