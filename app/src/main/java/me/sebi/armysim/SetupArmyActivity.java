@@ -187,15 +187,20 @@ public class SetupArmyActivity extends AppCompatActivity {
             CheckBox attackWeakest = (CheckBox) rowRL.findViewById(R.id.checkbox_atkWeakest);
             CheckBox distanceDamage = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceDamage);
             CheckBox distanceFighter = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceFighter);
-            try {
+            if (attributes.length > 1)
                 attack.setText(attributes[1]);
+            if (attributes.length > 2)
                 defense.setText(attributes[2]);
+            if (attributes.length > 3)
                 attackSpeed.setText(attributes[3]);
+            if (attributes.length > 4)
                 roundsAfterDeath.setText(attributes[4]);
+            if (attributes.length > 5)
                 attackWeakest.setChecked(attributes[5].equals("1"));
+            if (attributes.length > 6)
                 distanceDamage.setChecked(!attributes[6].equals("0"));
+            if (attributes.length > 7)
                 distanceFighter.setChecked(attributes[7].equals("1"));
-            } catch (ArrayIndexOutOfBoundsException e) { }
         }
     }
 

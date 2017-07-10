@@ -83,17 +83,15 @@ public class SetupSimulationActivity extends AppCompatActivity {
             //iterate through rows and add to army
             for (String armyRow : armyRows) {
                 String[] attributes = armyRow.split(",");
-                try {
-                    Row row = new Row(
-                            (attributes[1].equals("")) ? 0 : Integer.parseInt(attributes[1]),
-                            (attributes[2].equals("")) ? 0 : Integer.parseInt(attributes[2]),
-                            (attributes[3].equals("")) ? 0 : Integer.parseInt(attributes[3]),
-                            (attributes[4].equals("")) ? 0 : Integer.parseInt(attributes[4]),
-                            attributes[5].equals("1"),
-                            !attributes[6].equals("0"),
-                            attributes[7].equals("1"));
-                    army.addRow(row);
-                } catch (ArrayIndexOutOfBoundsException e) { }
+                Row row = new Row(
+                        (attributes.length > 1) && (attributes[1].equals("")) ? 0 : Integer.parseInt(attributes[1]),
+                        (attributes.length > 2) && (attributes[2].equals("")) ? 0 : Integer.parseInt(attributes[2]),
+                        (attributes.length > 3) && (attributes[3].equals("")) ? 0 : Integer.parseInt(attributes[3]),
+                        (attributes.length > 4) && (attributes[4].equals("")) ? 0 : Integer.parseInt(attributes[4]),
+                        (attributes.length > 5) && (attributes[5].equals("1")),
+                        (attributes.length > 6) && !(attributes[6].equals("0")),
+                        (attributes.length > 7) && (attributes[7].equals("1")));
+                army.addRow(row);
             }
         }
         return sim;

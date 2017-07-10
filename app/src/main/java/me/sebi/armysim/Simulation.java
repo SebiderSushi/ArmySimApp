@@ -19,7 +19,7 @@ class Simulation {
     final boolean useRandom;
     private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-    ArrayList<ArrayList<Army>> sortedArmies;
+    ArrayList<ArrayList<Army>> sortedArmies = new ArrayList<>(0);
 
     Simulation(boolean useRandom, Counter counter, Context echoContext, LinearLayout echoView) {
         this.useRandom = useRandom;
@@ -83,14 +83,13 @@ class Simulation {
     }
 
     void simulate() {
-        ArrayList<Army> armies_copy = (ArrayList<Army>) armies.clone();
-
         if (armies.size() == 0) {
             echo(echoContext.getResources().getString(R.string.echo_noArmies));
             return;
         }
         int round = 0;
         //Remove Rows already defined with 0 LP
+        ArrayList<Army> armies_copy = (ArrayList<Army>) armies.clone();
         for (Army army : armies_copy)
             army.rmDead(round);
         if (!stillRunning(round))
