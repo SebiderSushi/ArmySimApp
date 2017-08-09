@@ -83,8 +83,8 @@ public class SetupSimulationActivity extends Activity {
                 Row row = new Row(
                         (attributes.length > 1) && !(attributes[1].equals("")) ? Integer.parseInt(attributes[1]) : 0,
                         (attributes.length > 2) && !(attributes[2].equals("")) ? Integer.parseInt(attributes[2]) : 0,
-                        (attributes.length > 3) && !(attributes[3].equals("")) ? Integer.parseInt(attributes[3]) : 0,
                         (attributes.length > 8) && !(attributes[8].equals("")) ? Integer.parseInt(attributes[8]) : 0,
+                        (attributes.length > 3) && !(attributes[3].equals("")) ? Integer.parseInt(attributes[3]) : 0,
                         (attributes.length > 4) && !(attributes[4].equals("")) ? Integer.parseInt(attributes[4]) : 0,
                         (attributes.length > 5) && (attributes[5].equals("1")),
                         (attributes.length > 6) && !(attributes[6].equals("0")),

@@ -108,8 +108,8 @@ class Simulation {
                         attacker.distanceAttack(enemy);
             rmAllDead(round);
             //Here iteration so armies attack in best order.
-            //When a group of peers haz attaqzt, les deads be colektid.
-            //this way the best armies attack first and equal armies attack
+            //When a group of peers has attacked, all dead rows are removed.
+            //This way the best armies attack first and equally fast armies attack
             //each other simultaneously
             sortedArmies = this.armiesSortedBySpeed();
             for (ArrayList<Army> attackingArmies : sortedArmies) {

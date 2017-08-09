@@ -19,7 +19,8 @@ public class Army {
     }
 
     void addRow(Row row) {
-        if (row.DISTANCE_FIGHTER && rows.size() > 1)
+        if (row.DISTANCE_FIGHTER) //&& rows.size() > 1)
+
             this.distanceFighterRows.add(row);
         this.rows.add(row);
     }
@@ -43,8 +44,8 @@ public class Army {
             this.containingSimulation.armies.remove(this);
             for (ArrayList<Army> armies : this.containingSimulation.sortedArmies)
                 armies.remove(this);
-        } else if (this.distanceFighterRows.size() < 0 && this.distanceFighterRows.get(0) == this.rows.get(0))
-            this.distanceFighterRows.remove(0);
+        } //else if (this.distanceFighterRows.size() < 0 && this.distanceFighterRows.get(0) == this.rows.get(0))
+          //  this.distanceFighterRows.remove(0);
     }
 
     private Row weakestRow() {
@@ -72,30 +73,33 @@ public class Army {
     }
 
     void distanceAttack(Army enemy) {
-        int aAtk;
-        int bDef;
+        Row firstRow = this.rows.get(0);
         int enemyRowCount = enemy.rows.size();
         for (Row distanceFighter : this.distanceFighterRows) {
-            Row attackedRow;
-            if (distanceFighter.ATTACK_WEAKEST_ROW)
-                attackedRow = enemy.weakestRow();
-            else {
-                int attackedRowIndex = (int) (distanceFighter.reach + 5 * Math.random());
-                if (attackedRowIndex < enemyRowCount) {
-                    if (attackedRowIndex < 0)
-                        attackedRow = enemy.rows.get(0);
-                    else
-                        attackedRow = enemy.rows.get(attackedRowIndex);
-                } else
-                    attackedRow = enemy.rows.get(enemyRowCount - 1);
+            if (distanceFighter != firstRow) {
+                int aAtk;
+                int bDef;
+                Row attackedRow;
+                if (distanceFighter.ATTACK_WEAKEST_ROW)
+                    attackedRow = enemy.weakestRow();
+                else {
+                    int attackedRowIndex = (int) (distanceFighter.reach + 5 * Math.random());
+                    if (attackedRowIndex < enemyRowCount) {
+                        if (attackedRowIndex < 0)
+                            attackedRow = enemy.rows.get(0);
+                        else
+                            attackedRow = enemy.rows.get(attackedRowIndex);
+                    } else
+                        attackedRow = enemy.rows.get(enemyRowCount - 1);
+                }
+                aAtk = attackedRow.DISTANCE_DAMAGE ? distanceFighter.attack : 0;
+                bDef = attackedRow.defense;
+                if (this.containingSimulation.useRandom) {
+                    aAtk *= 1 + 0.5 * Math.random();
+                    bDef *= 1 + 0.5 * Math.random();
+                }
+                attackedRow.lives -= aAtk - bDef;
             }
-            aAtk = attackedRow.DISTANCE_DAMAGE ? distanceFighter.attack : 0;
-            bDef = attackedRow.defense;
-            if (this.containingSimulation.useRandom) {
-                aAtk *= 1 + 0.5 * Math.random();
-                bDef *= 1 + 0.5 * Math.random();
-            }
-            attackedRow.lives -= aAtk - bDef;
         }
     }
 }
