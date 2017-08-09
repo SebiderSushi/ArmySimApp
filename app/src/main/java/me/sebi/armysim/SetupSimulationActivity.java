@@ -4,32 +4,29 @@ package me.sebi.armysim;
  * Created by sebi on 15.06.17.
  */
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SetupSimulationActivity extends AppCompatActivity {
+public class SetupSimulationActivity extends Activity {
 
+    private final Counter counter = new Counter();
+    private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     ArrayList<String> armyNames;
     private String[] armies;
     private CheckBox checkbox_randomness;
     private EditText edit_iterations;
     private LinearLayout echoView;
-    private final Counter counter = new Counter();
-    private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +51,7 @@ public class SetupSimulationActivity extends AppCompatActivity {
         checkbox_randomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
     }
 
-    private void echo(@Nullable String color, String text) {
+    private void echo(String color, String text) {
         TextView echo = new TextView(this);
         echo.setText(text);
         if (color != null)
@@ -84,13 +81,15 @@ public class SetupSimulationActivity extends AppCompatActivity {
             for (String armyRow : armyRows) {
                 String[] attributes = armyRow.split(",");
                 Row row = new Row(
-                        (attributes.length > 1) && (attributes[1].equals("")) ? 0 : Integer.parseInt(attributes[1]),
-                        (attributes.length > 2) && (attributes[2].equals("")) ? 0 : Integer.parseInt(attributes[2]),
-                        (attributes.length > 3) && (attributes[3].equals("")) ? 0 : Integer.parseInt(attributes[3]),
-                        (attributes.length > 4) && (attributes[4].equals("")) ? 0 : Integer.parseInt(attributes[4]),
+                        (attributes.length > 1) && !(attributes[1].equals("")) ? Integer.parseInt(attributes[1]) : 0,
+                        (attributes.length > 2) && !(attributes[2].equals("")) ? Integer.parseInt(attributes[2]) : 0,
+                        (attributes.length > 3) && !(attributes[3].equals("")) ? Integer.parseInt(attributes[3]) : 0,
+                        (attributes.length > 8) && !(attributes[8].equals("")) ? Integer.parseInt(attributes[8]) : 0,
+                        (attributes.length > 4) && !(attributes[4].equals("")) ? Integer.parseInt(attributes[4]) : 0,
                         (attributes.length > 5) && (attributes[5].equals("1")),
                         (attributes.length > 6) && !(attributes[6].equals("0")),
-                        (attributes.length > 7) && (attributes[7].equals("1")));
+                        (attributes.length > 7) && (attributes[7].equals("1")),
+                        (attributes.length > 9) && !(attributes[9].equals("")) ? Integer.parseInt(attributes[9]) : 0);
                 army.addRow(row);
             }
         }

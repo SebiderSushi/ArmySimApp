@@ -1,11 +1,10 @@
 package me.sebi.armysim;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
  * Created by sebi on 15.06.17.
  */
 
-public class SetupArmyActivity extends AppCompatActivity {
+public class SetupArmyActivity extends Activity {
 
     private EditText editText_armyName;
     private SharedPreferences prefs_armies;
@@ -59,7 +58,7 @@ public class SetupArmyActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
-    public void addRow(@Nullable View view) {
+    public void addRow(View view) {
         LayoutInflater inflater;
         inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -82,9 +81,9 @@ public class SetupArmyActivity extends AppCompatActivity {
             RelativeLayout rowRL = ROWS.get(i); // Finally i've got some RL
             EditText number = (EditText) rowRL.findViewById(R.id.armyRow_editText_rowNumber);
             Integer numberInt = i + 1;
-            String numberSring = numberInt.toString();
+            String numberString = numberInt.toString();
             number.clearFocus();
-            number.setText(numberSring);
+            number.setText(numberString);
         }
         setTitleRowNumber(ROWS.size());
     }
@@ -227,11 +226,11 @@ public class SetupArmyActivity extends AppCompatActivity {
         return armyString.substring(0, armyString.length() - 1);
     }
 
-    public void saveButton(@Nullable View view) {
+    public void saveButton(View view) {
         saveArmy();
     }
 
-    public void saveExitButton(@Nullable View view) {
+    public void saveExitButton(View view) {
         saveArmy();
         finish();
     }
@@ -248,7 +247,7 @@ public class SetupArmyActivity extends AppCompatActivity {
         }
     }
 
-    public void switchToTextMode(@Nullable View view) {
+    public void switchToTextMode(View view) {
         Intent intent = new Intent(this, SetupArmyStringActivity.class);
         intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_STRING, getArmyString());
         intent.putExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAME, getArmyName());

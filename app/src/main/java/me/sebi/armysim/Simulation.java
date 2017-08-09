@@ -1,11 +1,13 @@
 package me.sebi.armysim;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sebi on 16.04.17.
@@ -13,10 +15,10 @@ import java.util.*;
 class Simulation {
 
     final ArrayList<Army> armies = new ArrayList<>();
+    final boolean useRandom;
     private final LinearLayout echoView;
     private final Context echoContext;
     private final Counter counter;
-    final boolean useRandom;
     private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
     ArrayList<ArrayList<Army>> sortedArmies = new ArrayList<>(0);
@@ -63,6 +65,12 @@ class Simulation {
         return true;
     }
 
+    void rmAllDead(int round) {
+        ArrayList<Army> armies_copy = (ArrayList<Army>) armies.clone();
+        for (Army army : armies_copy)
+            army.rmDead(round);
+    }
+
     private ArrayList<ArrayList<Army>> armiesSortedBySpeed() {
         Map<Integer, ArrayList<Army>> speedclasses = new HashMap<>();
         ArrayList<Integer> keys = new ArrayList<>();
@@ -89,13 +97,16 @@ class Simulation {
         }
         int round = 0;
         //Remove Rows already defined with 0 LP
-        ArrayList<Army> armies_copy = (ArrayList<Army>) armies.clone();
-        for (Army army : armies_copy)
-            army.rmDead(round);
+        rmAllDead(round);
         if (!stillRunning(round))
             return;
-        while (stillRunning(round)) {
+        while (true) {
             round += 1;
+            for (Army attacker : armies)
+                for (Army enemy : armies)
+                    if (attacker != enemy)
+                        attacker.distanceAttack(enemy);
+            rmAllDead(round);
             //Here iteration so armies attack in best order.
             //When a group of peers haz attaqzt, les deads be colektid.
             //this way the best armies attack first and equal armies attack
@@ -107,9 +118,7 @@ class Simulation {
                         for (Army enemy : enemyArmies)
                             if (attacker != enemy)
                                 attacker.attack(enemy);
-                armies_copy = (ArrayList<Army>) armies.clone();
-                for (Army army : armies_copy)
-                    army.rmDead(round);
+                rmAllDead(round);
                 if (!stillRunning(round))
                     return;
             }

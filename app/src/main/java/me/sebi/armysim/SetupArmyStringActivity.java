@@ -1,11 +1,10 @@
 package me.sebi.armysim;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,13 +13,13 @@ import android.widget.Toast;
  * Created by sebi on 25.06.17.
  */
 
-public class SetupArmyStringActivity extends AppCompatActivity {
+public class SetupArmyStringActivity extends Activity {
 
     EditText editText_armyString;
     EditText editText_armyName;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_army_text);
 

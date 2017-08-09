@@ -1,5 +1,7 @@
 package me.sebi.armysim;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -7,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE_ARMY_NAME = "me.sebi.armysim.ARMYNAME";
     public final static String EXTRA_MESSAGE_ARMY_NAMES = "me.sebi.armysim.ARMIES";
@@ -68,19 +69,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> armyNames = getAllArmyNames();
         Collections.sort(armyNames);
 
-        // Get ListView object from xml
         listView = (ListView) findViewById(R.id.lv_armies);
 
-        // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.element_listview_army, R.id.textView_listViewElem_armyName, armyNames);
-        // Assign adapter to ListView
         listView.setAdapter(adapter);
-        // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -158,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     public void saveRandomness(View view) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(KEY_RANDOMNESS, checkbox_randomness.isChecked());
-        editor.apply();
+        editor.commit();
     }
 
     public void createArmy(View view) {
@@ -217,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editPrefs = prefs_armies.edit();
             for (String army : armies)
                 editPrefs.remove(army);
-            editPrefs.apply();
+            editPrefs.commit();
 
             refreshListView();
         }
@@ -248,8 +241,13 @@ public class MainActivity extends AppCompatActivity {
         String saveText = selectedArmiesToString();
         if (saveText != null) {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("", saveText);
-            clipboard.setPrimaryClip(clip);
+            int sdk = Integer.parseInt(android.os.Build.VERSION.SDK);
+            if (sdk < 11) {
+                clipboard.setText(saveText);
+            } else {
+                ClipData clip = ClipData.newPlainText("", saveText);
+                clipboard.setPrimaryClip(clip);
+            }
             toast(getResources().getString(R.string.copied_to_clipboard));
         }
     }
@@ -269,10 +267,10 @@ public class MainActivity extends AppCompatActivity {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             ArrayList<String> armies = getCheckedArmies();
             if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
-                File path = Environment.getExternalStoragePublicDirectory("ArmySim");
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ArmySim";
                 for (String armyName : armies) {
                     String saveText = saveTextHead + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
-                    if (!saveTextToFile(new File(path.getAbsolutePath(), armyName + ".txt"), saveText))
+                    if (!saveTextToFile(new File(path, armyName + ".txt"), saveText))
                         toast(armyName + getResources().getString(R.string.export_could_not_save));
                 }
                 toast(getResources().getString(R.string.export_done));
