@@ -171,35 +171,37 @@ public class SetupArmyActivity extends Activity {
     }
 
     private void loadArmy(String armyString) {
-        ROWS = new ArrayList<>(0);
+        if (armyString != null && !armyString.equals("")) {
+            ROWS = new ArrayList<>(0);
 
-        String[] rowStrings = armyString.replace("\n", "").split(";");
+            String[] rowStrings = armyString.replace("\n", "").split(";");
 
-        for (int i = 0; i < rowStrings.length; i++) {
-            String[] attributes = rowStrings[i].split(",");
-            addRow(null);
-            RelativeLayout rowRL = ROWS.get(i);
-            EditText attack = (EditText) rowRL.findViewById(R.id.editText_attack);
-            EditText defense = (EditText) rowRL.findViewById(R.id.editText_defense);
-            EditText attackSpeed = (EditText) rowRL.findViewById(R.id.editText_attackSpeed);
-            EditText roundsAfterDeath = (EditText) rowRL.findViewById(R.id.editText_roundsAfterDeath);
-            CheckBox attackWeakest = (CheckBox) rowRL.findViewById(R.id.checkbox_atkWeakest);
-            CheckBox distanceDamage = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceDamage);
-            CheckBox distanceFighter = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceFighter);
-            if (attributes.length > 1)
-                attack.setText(attributes[1]);
-            if (attributes.length > 2)
-                defense.setText(attributes[2]);
-            if (attributes.length > 3)
-                attackSpeed.setText(attributes[3]);
-            if (attributes.length > 4)
-                roundsAfterDeath.setText(attributes[4]);
-            if (attributes.length > 5)
-                attackWeakest.setChecked(attributes[5].equals("1"));
-            if (attributes.length > 6)
-                distanceDamage.setChecked(!attributes[6].equals("0"));
-            if (attributes.length > 7)
-                distanceFighter.setChecked(attributes[7].equals("1"));
+            for (int i = 0; i < rowStrings.length; i++) {
+                String[] attributes = rowStrings[i].split(",");
+                addRow(null);
+                RelativeLayout rowRL = ROWS.get(i);
+                EditText attack = (EditText) rowRL.findViewById(R.id.editText_attack);
+                EditText defense = (EditText) rowRL.findViewById(R.id.editText_defense);
+                EditText attackSpeed = (EditText) rowRL.findViewById(R.id.editText_attackSpeed);
+                EditText roundsAfterDeath = (EditText) rowRL.findViewById(R.id.editText_roundsAfterDeath);
+                CheckBox attackWeakest = (CheckBox) rowRL.findViewById(R.id.checkbox_atkWeakest);
+                CheckBox distanceDamage = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceDamage);
+                CheckBox distanceFighter = (CheckBox) rowRL.findViewById(R.id.checkbox_DistanceFighter);
+                if (attributes.length > 1)
+                    attack.setText(attributes[1]);
+                if (attributes.length > 2)
+                    defense.setText(attributes[2]);
+                if (attributes.length > 3)
+                    attackSpeed.setText(attributes[3]);
+                if (attributes.length > 4)
+                    roundsAfterDeath.setText(attributes[4]);
+                if (attributes.length > 5)
+                    attackWeakest.setChecked(attributes[5].equals("1"));
+                if (attributes.length > 6)
+                    distanceDamage.setChecked(!attributes[6].equals("0"));
+                if (attributes.length > 7)
+                    distanceFighter.setChecked(attributes[7].equals("1"));
+            }
         }
     }
 
@@ -209,8 +211,9 @@ public class SetupArmyActivity extends Activity {
 
     private String getArmyString() {
         String armyString = "";
+        int rowsSize = ROWS.size();
 
-        for (int i = 0; i < ROWS.size(); i++) {
+        for (int i = 0; i < rowsSize; i++) {
             RelativeLayout row = ROWS.get(i);
             String attack = ((EditText) row.findViewById(R.id.editText_attack)).getText().toString();
             String defense = ((EditText) row.findViewById(R.id.editText_defense)).getText().toString();
@@ -223,7 +226,7 @@ public class SetupArmyActivity extends Activity {
                     + roundsAfterDeath + "," + attackWeakest + "," + distanceDamage + "," + distanceFighter + ";" + "\n";
         }
 
-        return armyString.substring(0, armyString.length() - 1);
+        return rowsSize >= 1 ? armyString.substring(0, armyString.length() - 1) : "";
     }
 
     public void saveButton(View view) {
