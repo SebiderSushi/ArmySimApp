@@ -239,11 +239,12 @@ public class MainActivity extends Activity {
     public void copySelectedArmies(View view) {
         String saveText = selectedArmiesToString();
         if (saveText != null) {
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             int sdk = Integer.parseInt(android.os.Build.VERSION.SDK);
             if (sdk < 11) {
+                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboard.setText(saveText);
             } else {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("", saveText);
                 clipboard.setPrimaryClip(clip);
             }
@@ -293,42 +294,6 @@ public class MainActivity extends Activity {
             return false;
         }
     }
-
-    /*
-    public void convertSelectedArmies(View view) {
-        ArrayList<String> armies = getCheckedArmies();
-        if (armies.size() > 0)
-            for (String army : armies)
-                convertArmy(army);
-    }
-
-    private void convertAllArmies() {
-        ArrayList<String> armies = getAllArmyNames();
-        for (String army : armies)
-            convertArmy(army);
-    }
-
-    private void convertArmy(String armyName) {
-        String armyString = prefs_armies.getString(armyName, "");
-        String[] rowStrings = armyString.replace("\n", "").split(";");
-        String newArmyString = "";
-
-        for (int i = 0; i < rowStrings.length; i++) {
-            String[] attributes = rowStrings[i].split(",");
-            newArmyString = newArmyString + rowStrings[i];
-            for (int c = attributes.length; c < 8; c++)
-                newArmyString = newArmyString + ",";
-            newArmyString = newArmyString + ";" + "\n";
-        }
-        newArmyString = newArmyString.substring(0, newArmyString.length() - 1);
-
-        SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(armyName, newArmyString);
-        if (!editor.commit()) {
-            toast(armyName + getResources().getString(R.string.toast_save_failed));
-        }
-    }*/
 
     public void startSimulationSetup(View view) {
         ArrayList<String> armies = getCheckedArmies();
