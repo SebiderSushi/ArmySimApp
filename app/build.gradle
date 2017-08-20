@@ -4,17 +4,17 @@ android {
     buildToolsVersion '26.0.1'
     defaultConfig {
         applicationId "me.sebi.armysim"
-        minSdkVersion 4
         targetSdkVersion 23
         versionCode 1
         versionName "beta08"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        release { minifyEnabled true }
+        debug { applicationIdSuffix '.debug' }
+    }
+    productFlavors {
+        minsdk17 { minSdkVersion 17 }
+        minsdk4 { minSdkVersion 4 }
     }
 }
