@@ -7,7 +7,6 @@
     <string name="delete_confirm">"Die folgenden Armeen werden GELÖSCHT:"</string>
     <string name="delete_confirm_all">"ALLE Armeen werden GELÖSCHT!"</string>
     <string name="cancel">Abbrechen</string>
-    <string name="reload">Neu Laden</string>
     <string name="editing">"Bearbeiten: "</string>
     <string name="editMode">" (Bearbeiten)"</string>
     <string name="row">"Reihe"</string>
@@ -18,7 +17,6 @@
     <string name="namelessArmy">Namenlose Armee</string>
     <string name="toast_saved">" gespeichert"</string>
     <string name="toast_save_failed">": Fehler beim Speichern!"</string>
-    <string name="toast_mismatch">" hat ein falsches Format. Armee konvertiert?"</string>
     <string name="button_saveArmy">Speichern</string>
     <string name="button_saveArmy_and_exit">"Speichern &amp; Schließen"</string>
     <string name="button_newSimulation">"Simulation"</string>
@@ -49,11 +47,11 @@
     <string name="invert">"Umkehren"</string>
     <string name="export_done">"Export abgeschlossen"</string>
     <string name="export_not_writable">"Speicher NICHT schreibbar!"</string>
-    <string name="export_could_not_save">" konnte NICHT gespeichert werden!"</string>
+    <string name="export_could_not_save">" konnte NICHT gespeichert werden! (Schreibfehler)"</string>
     <string name="share">Teilen</string>
     <string name="copied_to_clipboard">Ausgewählte Armeen in Zwischenablage kopiert</string>
     <string name="text">Text</string>
     <string name="editor">Editor</string>
     <string name="name">Name</string>
-    <string name="reSave">Konvertieren</string>
+    <string name="toast_permissiondenied_storage">Speicherberechtigung zum exportieren benötigt</string>
 </resources>

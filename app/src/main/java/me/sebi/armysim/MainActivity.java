@@ -1,15 +1,19 @@
 package me.sebi.armysim;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.Environment;
-import android.os.Bundle;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends Activity {
 
     public final static String EXTRA_MESSAGE_ARMY_NAME = "me.sebi.armysim.ARMYNAME";
@@ -37,11 +42,40 @@ public class MainActivity extends Activity {
     public final static String PREFERENCES = "me.sebi.armysim.PREFERENCES";
     public final static String PREFERENCES_ARMIES = "me.sebi.armysim.ARMIES";
     public final static String saveTextHead = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest,distanceFighter;";
-
+    private final static int PERMISSION_REQUEST_EXPORT_ARMIES = 1;
+    private final int sdk = Integer.parseInt(Build.VERSION.SDK);
+    private String exportpath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ArmySim";
     private ListView listView;
-    SharedPreferences prefs, prefs_armies;
-    CheckBox checkbox_randomness;
-    boolean allChecked;
+    private SharedPreferences prefs, prefs_armies;
+    private CheckBox checkbox_randomness;
+    private boolean allChecked;
+
+    static boolean saveTextToFile(File path, String text) {
+        try {
+            path.getParentFile().mkdirs();
+            path.createNewFile();
+            FileOutputStream outputStream = new FileOutputStream(path);
+            outputStream.write(text.getBytes());
+            outputStream.flush();
+            outputStream.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @TargetApi(11)
+    static void copyToClipboard(Context context, String string) {
+        int sdk = Integer.parseInt(Build.VERSION.SDK);
+        if (sdk < 11) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(string);
+        } else {
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", string);
+            clipboard.setPrimaryClip(clip);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +98,25 @@ public class MainActivity extends Activity {
         refreshListView();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_EXPORT_ARMIES:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    exportSelectedArmies();
+        }
+    }
+
+    @TargetApi(23)
+    private boolean checkPermission(String permission, int request) {
+        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED)
+            return true;
+        else {
+            requestPermissions(new String[]{permission}, request);
+            return false;
+        }
+    }
+
     private void refreshListView() {
         ArrayList<String> armyNames = getAllArmyNames();
         Collections.sort(armyNames);
@@ -77,7 +130,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String armyName = (String) listView.getItemAtPosition(position);
-                toast(MainActivity.this.getResources().getText(R.string.editing) + armyName);
+                toast(MainActivity.this.getText(R.string.editing) + armyName);
                 startArmySetup(armyName, true, -1);
             }
         });
@@ -121,7 +174,7 @@ public class MainActivity extends Activity {
         }
 
         if (armies.size() == 0)
-            toast(this.getResources().getString(R.string.echo_noArmies));
+            toast(this.getString(R.string.echo_noArmies));
         return armies;
     }
 
@@ -175,13 +228,13 @@ public class MainActivity extends Activity {
     public void deleteButton(View view) {
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() > 0) {
-            String cancel = getResources().getString(R.string.cancel);
-            String delete = getResources().getString(R.string.delete);
-            String body = "";
+            String cancel = getString(R.string.cancel);
+            String delete = getString(R.string.delete);
+            String body;
             if (allChecked) {
-                body = getResources().getString(R.string.delete_confirm_all);
+                body = getString(R.string.delete_confirm_all);
             } else {
-                body = getResources().getString(R.string.delete_confirm);
+                body = getString(R.string.delete_confirm);
                 for (String army : armies)
                     body = body + "\n" + army;
             }
@@ -226,11 +279,9 @@ public class MainActivity extends Activity {
     private String selectedArmiesToString() {
         String armyString = saveTextHead;
         ArrayList<String> armies = getCheckedArmies();
-        if (armies.size() > 0) { // '> 0' instead of '!= 0' just in case of undetermined future developments
-            for (String armyName : armies) {
-                //convertArmy(armyName);
-                armyString = armyString + "\n\n" + armyName + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
-            }
+        if (armies.size() > 0) {
+            for (String armyName : armies)
+                armyString = armyString + "\n\n" + armyName + "\n" + prefs_armies.getString(armyName, getString(R.string.error_could_not_get_army));
             return armyString;
         }
         return null;
@@ -239,16 +290,8 @@ public class MainActivity extends Activity {
     public void copySelectedArmies(View view) {
         String saveText = selectedArmiesToString();
         if (saveText != null) {
-            int sdk = Integer.parseInt(android.os.Build.VERSION.SDK);
-            if (sdk < 11) {
-                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboard.setText(saveText);
-            } else {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("", saveText);
-                clipboard.setPrimaryClip(clip);
-            }
-            toast(getResources().getString(R.string.copied_to_clipboard));
+            copyToClipboard(this, saveText);
+            toast(getString(R.string.copied_to_clipboard));
         }
     }
 
@@ -263,35 +306,23 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void exportSelectedArmies(View view) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            ArrayList<String> armies = getCheckedArmies();
-            if (armies.size() > 0) { // '> 0' just in case of undetermined future developments
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ArmySim";
-                for (String armyName : armies) {
-                    String saveText = saveTextHead + "\n" + prefs_armies.getString(armyName, getResources().getString(R.string.error_could_not_get_army));
-                    if (!saveTextToFile(new File(path, armyName + ".txt"), saveText))
-                        toast(armyName + getResources().getString(R.string.export_could_not_save));
-                }
-                toast(getResources().getString(R.string.export_done));
-            }
-        } else {
-            toast(getResources().getString(R.string.export_not_writable));
-        }
+    public void exportSelectedArmiesButton(View view) {
+        if (sdk < 23 || checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSION_REQUEST_EXPORT_ARMIES))
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+                exportSelectedArmies();
+            else toast(getString(R.string.export_not_writable));
+        else toast(getString(R.string.toast_permissiondenied_storage));
     }
 
-    public boolean saveTextToFile(File path, String text) {
-        try {
-            path.getParentFile().mkdirs();
-            path.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(path);
-            outputStream.write(text.getBytes());
-            outputStream.flush();
-            outputStream.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+    private void exportSelectedArmies() {
+        ArrayList<String> armies = getCheckedArmies();
+        if (armies.size() > 0) {
+            for (String armyName : armies) {
+                String saveText = saveTextHead + "\n" + prefs_armies.getString(armyName, getString(R.string.error_could_not_get_army));
+                if (!saveTextToFile(new File(exportpath, armyName + ".txt"), saveText))
+                    toast(armyName + getString(R.string.export_could_not_save));
+            }
+            toast(getString(R.string.export_done));
         }
     }
 

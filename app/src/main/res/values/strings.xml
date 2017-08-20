@@ -10,7 +10,6 @@
     <string name="delete_confirm">"The following armies are going to be DELETED:"</string>
     <string name="delete_confirm_all">"ALL armies are going to be DELETED!"</string>
     <string name="cancel">Cancel</string>
-    <string name="reload">Reload</string>
     <string name="editing">"Editing "</string>
     <string name="editMode">" (Edit Mode)"</string>
     <string name="row">"Row"</string>
@@ -21,7 +20,6 @@
     <string name="namelessArmy">Nameless Army</string>
     <string name="toast_saved">" saved"</string>
     <string name="toast_save_failed">": Saving FAILED!"</string>
-    <string name="toast_mismatch">" has a wrong format. Army converted?"</string>
     <string name="button_saveArmy">Save</string>
     <string name="button_saveArmy_and_exit">"Save &amp; Exit"</string>
     <string name="button_newSimulation">"Fight!"</string>
@@ -55,11 +53,11 @@
     <string name="invert">Invert</string>
     <string name="export_done">"Export done"</string>
     <string name="export_not_writable">"Storage NOT writable!"</string>
-    <string name="export_could_not_save">" could NOT be saved!"</string>
+    <string name="export_could_not_save">" could NOT be saved! (Write Error)"</string>
     <string name="share">Share</string>
     <string name="copied_to_clipboard">Selected Armies copied to clipboard</string>
     <string name="text">Text</string>
     <string name="editor">Editor</string>
     <string name="name">Name</string>
-    <string name="reSave">Convert</string>
+    <string name="toast_permissiondenied_storage">Storage permission required to export</string>
 </resources>
