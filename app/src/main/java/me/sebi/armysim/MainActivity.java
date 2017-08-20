@@ -44,13 +44,14 @@ public class MainActivity extends Activity {
     public final static String saveTextHead = "rowNumber,attack,lp,roundsAfterDeath,attackSpeed,attackWeakest,distanceFighter;";
     private final static int PERMISSION_REQUEST_EXPORT_ARMIES = 1;
     private final int sdk = Integer.parseInt(Build.VERSION.SDK);
-    private String exportpath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ArmySim";
+    private final String exportpath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ArmySim";
     private ListView listView;
     private SharedPreferences prefs, prefs_armies;
     private CheckBox checkbox_randomness;
     private boolean allChecked;
 
-    static boolean saveTextToFile(File path, String text) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static boolean saveTextToFile(File path, String text) {
         try {
             path.getParentFile().mkdirs();
             path.createNewFile();
@@ -65,7 +66,7 @@ public class MainActivity extends Activity {
     }
 
     @TargetApi(11)
-    static void copyToClipboard(Context context, String string) {
+    private static void copyToClipboard(Context context, String string) {
         int sdk = Integer.parseInt(Build.VERSION.SDK);
         if (sdk < 11) {
             android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -221,7 +222,7 @@ public class MainActivity extends Activity {
         editText_rowCount.setText("");
     }
 
-    public void toast(String text) {
+    private void toast(String text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
@@ -256,7 +257,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void deleteSelectedArmies() {
+    private void deleteSelectedArmies() {
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() != 0) {
             SharedPreferences.Editor editPrefs = prefs_armies.edit();

@@ -39,11 +39,11 @@ class Simulation {
         echoView.addView(echo, 0);
     }
 
-    private boolean stillRunning(int round) {
+    private boolean gameOver(int round) {
         if (armies.size() == 0) {
             counter.ties++;
             echo(echoContext.getResources().getString(R.string.echo_tie) + " (" + counter.ties + ")");
-            return false;
+            return true;
         }
         if (armies.size() == 1) {
             int rowsLeft = armies.get(0).rows.size();
@@ -60,12 +60,12 @@ class Simulation {
                     + (rowsLeft == 1 ? "" : echoContext.getResources().getString(R.string.echo_win_plural))
                     + echoContext.getResources().getString(R.string.echo_win_left)
                     + " (" + wins + ")");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
-    void rmAllDead(int round) {
+    private void rmAllDead(int round) {
         ArrayList<Army> armies_copy = (ArrayList<Army>) armies.clone();
         for (Army army : armies_copy)
             army.rmDead(round);
@@ -98,7 +98,7 @@ class Simulation {
         int round = 0;
         //Remove Rows already defined with 0 LP
         rmAllDead(round);
-        if (!stillRunning(round))
+        if (gameOver(round))
             return;
         while (true) {
             round += 1;
@@ -119,7 +119,7 @@ class Simulation {
                             if (attacker != enemy)
                                 attacker.attack(enemy);
                 rmAllDead(round);
-                if (!stillRunning(round))
+                if (gameOver(round))
                     return;
             }
         }

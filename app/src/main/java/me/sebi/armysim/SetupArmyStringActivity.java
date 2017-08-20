@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 public class SetupArmyStringActivity extends Activity {
 
-    EditText editText_armyString;
-    EditText editText_armyName;
+    private EditText editText_armyString;
+    private EditText editText_armyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class SetupArmyStringActivity extends Activity {
         setTitle(armyName + getResources().getString(R.string.editMode));
     }
 
-    public void toast(String text) {
+    private void toast(String text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
@@ -62,7 +62,7 @@ public class SetupArmyStringActivity extends Activity {
         saveArmy();
     }
 
-    public void saveArmy() {
+    private void saveArmy() {
         SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         String armyName = editText_armyName.getText().toString();

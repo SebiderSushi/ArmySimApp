@@ -54,13 +54,13 @@ public class SetupArmyActivity extends Activity {
         }
     }
 
-    public void toast(String text) {
+    private void toast(String text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     public void addRow(View view) {
         LayoutInflater inflater;
-        inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         ViewGroup rowBox = (ViewGroup) findViewById(R.id.armySetup_ll_rowBox);
 
@@ -239,8 +239,7 @@ public class SetupArmyActivity extends Activity {
     }
 
     private void saveArmy() {
-        SharedPreferences sharedPrefs = this.getSharedPreferences("me.sebi.armysim.ARMIES", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
+        SharedPreferences.Editor editor = prefs_armies.edit();
         String armyName = getArmyName();
         editor.putString(armyName, getArmyString());
         if (editor.commit()) {

@@ -1,9 +1,5 @@
 package me.sebi.armysim;
 
-/**
- * Created by sebi on 15.06.17.
- */
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,11 +14,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * Created by sebi on 15.06.17.
+ */
+
 public class SetupSimulationActivity extends Activity {
 
     private final Counter counter = new Counter();
     private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-    ArrayList<String> armyNames;
+    private ArrayList<String> armyNames;
     private String[] armies;
     private CheckBox checkbox_randomness;
     private EditText edit_iterations;

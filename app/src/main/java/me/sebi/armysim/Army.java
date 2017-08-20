@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by sebi on 16.04.17.
  */
-public class Army {
+class Army {
 
     final ArrayList<Row> rows = new ArrayList<>();
     final String name;
