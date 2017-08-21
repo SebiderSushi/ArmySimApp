@@ -1,4 +1,14 @@
 apply plugin: 'com.android.application'
+
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion '26.0.1'
@@ -8,13 +18,23 @@ android {
         versionCode 1
         versionName "beta08"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        archivesBaseName = "ArmySim_08_${getGitHash()}"
     }
     buildTypes {
-        release { minifyEnabled true }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+        }
         debug { applicationIdSuffix '.debug' }
     }
     productFlavors {
-        minsdk17 { minSdkVersion 17 }
-        minsdk4 { minSdkVersion 4 }
+        minsdk17 {
+            dimension "size"
+            minSdkVersion 17
+        }
+        minsdk4 {
+            dimension "size"
+            minSdkVersion 4
+        }
     }
 }
