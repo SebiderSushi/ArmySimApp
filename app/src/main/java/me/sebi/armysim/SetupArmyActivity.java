@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by sebi on 15.06.17.
@@ -58,6 +59,7 @@ public class SetupArmyActivity extends Activity {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
     public void addRow(View view) {
         LayoutInflater inflater;
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -69,7 +71,7 @@ public class SetupArmyActivity extends Activity {
 
         EditText rowNumber = (EditText) row.findViewById(R.id.armyRow_editText_rowNumber);
         Integer number = ROWS.size();
-        rowNumber.setText(number.toString());
+        rowNumber.setText(String.format(Locale.getDefault(), "%d", number));
 
         setTitleRowNumber(number);
 
