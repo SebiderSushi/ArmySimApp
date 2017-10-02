@@ -7,6 +7,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -66,9 +67,16 @@ class Simulation {
     }
 
     private void rmAllDead(int round) {
-        ArrayList<Army> armies_copy = (ArrayList<Army>) armies.clone();
-        for (Army army : armies_copy)
+        Iterator<Army> armyIterator = armies.iterator();
+        while (armyIterator.hasNext()) {
+            Army army = armyIterator.next();
             army.rmDead(round);
+            if (army.rows.size() == 0) {
+                armyIterator.remove();
+                for (ArrayList<Army> armies : army.containingSimulation.sortedArmies)
+                    armies.remove(army);
+            }
+        }
     }
 
     private ArrayList<ArrayList<Army>> armiesSortedBySpeed() {

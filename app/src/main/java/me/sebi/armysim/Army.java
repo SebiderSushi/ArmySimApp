@@ -10,7 +10,7 @@ class Army {
     final ArrayList<Row> rows = new ArrayList<>();
     final String name;
     private final ArrayList<Row> distanceFighterRows = new ArrayList<>();
-    private final Simulation containingSimulation;
+    final Simulation containingSimulation;
 
     Army(String name, Simulation containingSimulation) {
         this.name = name;
@@ -40,12 +40,6 @@ class Army {
             this.rows.remove(deadRow);
             this.distanceFighterRows.remove(deadRow);
         }
-        if (this.rows.size() == 0) {
-            this.containingSimulation.armies.remove(this);
-            for (ArrayList<Army> armies : this.containingSimulation.sortedArmies)
-                armies.remove(this);
-        } //else if (this.distanceFighterRows.size() < 0 && this.distanceFighterRows.get(0) == this.rows.get(0))
-          //  this.distanceFighterRows.remove(0);
     }
 
     private Row weakestRow() {
