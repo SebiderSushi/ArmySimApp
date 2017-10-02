@@ -49,6 +49,8 @@ public class MainActivity extends Activity {
     private SharedPreferences prefs, prefs_armies;
     private CheckBox checkbox_randomness;
     private boolean allChecked;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> armyNames;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static boolean saveTextToFile(File path, String text) {
@@ -89,7 +91,32 @@ public class MainActivity extends Activity {
 
         checkbox_randomness.setChecked(prefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
 
-        refreshListView();
+        listView = (ListView) findViewById(R.id.lv_armies);
+
+        armyNames = getAllArmyNames();
+        Collections.sort(armyNames);
+
+        adapter = new ArrayAdapter<>(this,
+                R.layout.element_listview_army,
+                R.id.textView_listViewElem_armyName,
+                armyNames);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String armyName = (String) listView.getItemAtPosition(position);
+                toast(MainActivity.this.getText(R.string.editing) + armyName);
+                startArmySetup(armyName, true, -1);
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String armyName = (String) listView.getItemAtPosition(position);
+                toast("Rename" + armyName);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -108,6 +135,7 @@ public class MainActivity extends Activity {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     @TargetApi(23)
     private boolean checkPermission(String permission, int request) {
         if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED)
@@ -119,30 +147,10 @@ public class MainActivity extends Activity {
     }
 
     private void refreshListView() {
-        ArrayList<String> armyNames = getAllArmyNames();
+        armyNames.clear();
+        armyNames.addAll(getAllArmyNames());
         Collections.sort(armyNames);
-
-        listView = (ListView) findViewById(R.id.lv_armies);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                R.layout.element_listview_army, R.id.textView_listViewElem_armyName, armyNames);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String armyName = (String) listView.getItemAtPosition(position);
-                toast(MainActivity.this.getText(R.string.editing) + armyName);
-                startArmySetup(armyName, true, -1);
-            }
-        });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String armyName = (String) listView.getItemAtPosition(position);
-                toast("Rename" + armyName);
-                return true;
-            }
-        });
+        adapter.notifyDataSetChanged();
     }
 
     private ArrayList<String> getAllArmyNames() {
