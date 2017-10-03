@@ -169,7 +169,7 @@ class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
     private final Context context;
     private final SetupSimulationActivity setupSimulationActivity;
     private final Counter counter_global;
-    private final int iterations;
+    private int iterations;
     private long start, end;
 
     SimulationAsyncTask(Simulation sim, Context context, TextView echoView, int iterations, Counter counter_global) {
@@ -191,6 +191,8 @@ class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         for (int i = 0; i < iterations; i++) {
+            if (this.isCancelled())
+                return null;
             sim.simulate();
             String result = "Error";
             if (sim.armies.size() == 1) {
