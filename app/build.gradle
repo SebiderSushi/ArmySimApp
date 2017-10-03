@@ -8,14 +8,14 @@ def getGitHash = { ->
     return stdout.toString().trim()
 }
 android {
-    compileSdkVersion 23
-    buildToolsVersion '26.0.1'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "me.sebi.armysim"
         minSdkVersion 4
         targetSdkVersion 23
         versionCode 1
-        versionName "beta08"
+        versionName "beta09"
         archivesBaseName = "ArmySim_${versionName}_${getGitHash()}"
     }
     buildTypes {

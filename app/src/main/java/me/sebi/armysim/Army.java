@@ -8,16 +8,17 @@ import java.util.ArrayList;
 class Army {
 
     final ArrayList<Row> rows = new ArrayList<>();
-    private final ArrayList<Row> rows_orig = new ArrayList<>();
     final String name;
+    final Simulation containingSimulation;
+    private final ArrayList<Row> rows_orig = new ArrayList<>();
     private final ArrayList<Row> distanceFighterRows = new ArrayList<>();
     private final ArrayList<Row> distanceFighterRows_orig = new ArrayList<>();
-    final Simulation containingSimulation;
 
     Army(String name, Simulation containingSimulation) {
         this.name = name;
         this.containingSimulation = containingSimulation;
         this.containingSimulation.armies_orig.add(this);
+        this.containingSimulation.counter.armyWins.put(name, 0);
     }
 
     void addRow(Row row) {
@@ -27,7 +28,6 @@ class Army {
     }
 
     void reset() {
-
         rows.clear();
         rows.addAll(rows_orig);
         distanceFighterRows.clear();
