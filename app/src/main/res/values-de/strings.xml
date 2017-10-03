@@ -35,6 +35,7 @@
     <string name="randomness_off">Zufälligkeit deaktiviert.</string>
     <string name="echo_tie">"Gleichstand - alle tot ;("</string>
     <string name="echo_ties">"Gleichstände: "</string>
+    <string name="echo_total">"Gesamt: "</string>
     <string name="echo_noArmies">"Keine Armeen ausgewählt."</string>
     <string name="echo_win_winInRound">" gewinnt in Runde "</string>
     <string name="echo_win_w">" mit "</string>

@@ -27,6 +27,7 @@ public class SetupSimulationActivity extends Activity {
     private CheckBox checkbox_randomness;
     private EditText edit_iterations;
     private LinearLayout echoView;
+    private Simulation sim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +50,22 @@ public class SetupSimulationActivity extends Activity {
 
         SharedPreferences sharedPrefs = this.getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
         checkbox_randomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
+
+        sim = loadSim(armies);
     }
 
     private void echo(String color, String text) {
-        TextView echo = new TextView(this);
+        TextView echo;
+        if (echoView.getChildCount() >= 1000) {
+            echo = (TextView) echoView.getChildAt(999);
+            echoView.removeViewAt(999);
+        } else {
+            echo = new TextView(this);
+        }
         echo.setText(text);
         if (color != null)
             echo.setTextColor(Color.parseColor(color));
         echo.setLayoutParams(echoParams);
-        if (echoView.getChildCount() >= 1000)
-            echoView.removeViewAt(999);
         echoView.addView(echo, 0);
     }
 
@@ -69,8 +76,8 @@ public class SetupSimulationActivity extends Activity {
                 ));
     }
 
-    private Simulation loadSim(String[] armies, boolean useRandom) {
-        Simulation sim = new Simulation(useRandom, counter, this, echoView);
+    private Simulation loadSim(String[] armies) {
+        Simulation sim = new Simulation(counter, this, echoView);
         //iterate through armystrings
         for (int i = 0; i < armies.length; i++) {
             String armyString = armies[i];
@@ -97,18 +104,18 @@ public class SetupSimulationActivity extends Activity {
     }
 
     public void startSimulation(View view) {
+        sim.useRandom = checkbox_randomness.isChecked();
         String str_iterations = edit_iterations.getText().toString();
         int iterations = 1;
         if (!str_iterations.equals(""))
             iterations = Integer.parseInt(str_iterations);
-        for (int i = 0; i < iterations; i++) {
-            Simulation sim = loadSim(armies, checkbox_randomness.isChecked());
+        for (int i = 0; i < iterations; i++)
             sim.simulate();
-        }
-        String text = getResources().getString(R.string.echo_ties) + counter.ties;
+        String text = getResources().getString(R.string.echo_total) + counter.total;
+        text += " " + getResources().getString(R.string.echo_ties) + counter.ties;
         for (String armyName : armyNames) {
             Integer wins = counter.armyWins.get(armyName);
-            text = text + " " + armyName + ": " + ((wins != null) ? wins : "0");
+            text += " " + armyName + ": " + ((wins != null) ? wins : "0");
         }
         echo(null, text);
     }

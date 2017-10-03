@@ -8,21 +8,32 @@ import java.util.ArrayList;
 class Army {
 
     final ArrayList<Row> rows = new ArrayList<>();
+    private final ArrayList<Row> rows_orig = new ArrayList<>();
     final String name;
     private final ArrayList<Row> distanceFighterRows = new ArrayList<>();
+    private final ArrayList<Row> distanceFighterRows_orig = new ArrayList<>();
     final Simulation containingSimulation;
 
     Army(String name, Simulation containingSimulation) {
         this.name = name;
         this.containingSimulation = containingSimulation;
-        this.containingSimulation.armies.add(this);
+        this.containingSimulation.armies_orig.add(this);
     }
 
     void addRow(Row row) {
-        if (row.DISTANCE_FIGHTER) //&& rows.size() > 1)
+        if (row.DISTANCE_FIGHTER)
+            this.distanceFighterRows_orig.add(row);
+        this.rows_orig.add(row);
+    }
 
-            this.distanceFighterRows.add(row);
-        this.rows.add(row);
+    void reset() {
+
+        rows.clear();
+        rows.addAll(rows_orig);
+        distanceFighterRows.clear();
+        distanceFighterRows.addAll(distanceFighterRows_orig);
+        for (Row row : rows_orig)
+            row.reset();
     }
 
     void rmDead(int round) {

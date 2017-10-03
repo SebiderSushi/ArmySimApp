@@ -15,17 +15,17 @@ import java.util.Map;
  */
 class Simulation {
 
-    final ArrayList<Army> armies = new ArrayList<>();
-    final boolean useRandom;
+    private final ArrayList<Army> armies = new ArrayList<>();
+    final ArrayList<Army> armies_orig = new ArrayList<>();
+    boolean useRandom;
     private final LinearLayout echoView;
     private final Context echoContext;
     private final Counter counter;
     private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-    ArrayList<ArrayList<Army>> sortedArmies = new ArrayList<>(0);
+    private ArrayList<ArrayList<Army>> sortedArmies = new ArrayList<>(0);
 
-    Simulation(boolean useRandom, Counter counter, Context echoContext, LinearLayout echoView) {
-        this.useRandom = useRandom;
+    Simulation(Counter counter, Context echoContext, LinearLayout echoView) {
         this.counter = counter;
         this.echoView = echoView;
         this.echoContext = echoContext;
@@ -99,10 +99,8 @@ class Simulation {
     }
 
     void simulate() {
-        if (armies.size() == 0) {
-            echo(echoContext.getResources().getString(R.string.echo_noArmies));
-            return;
-        }
+        reset();
+        counter.total++;
         int round = 0;
         //Remove Rows already defined with 0 LP
         rmAllDead(round);
@@ -131,5 +129,12 @@ class Simulation {
                     return;
             }
         }
+    }
+
+    private void reset(){
+        armies.clear();
+        armies.addAll(armies_orig);
+        for (Army army : armies_orig)
+            army.reset();
     }
 }

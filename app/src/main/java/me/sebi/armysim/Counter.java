@@ -9,5 +9,6 @@ import java.util.Map;
 
 class Counter {
     int ties = 0;
+    int total = 0;
     final Map<String, Integer> armyWins = new HashMap<>();
 }
