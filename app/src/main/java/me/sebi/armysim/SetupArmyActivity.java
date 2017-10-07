@@ -91,9 +91,8 @@ public class SetupArmyActivity extends Activity {
     }
 
     private void setTitleRowNumber(int number) {
-        setTitle(getArmyName() + this.getResources().getString(R.string.editMode) + " " + number + " "
-                + this.getResources().getString(R.string.row)
-                + ((number != 1) ? this.getResources().getString(R.string.echo_win_plural) : ""));
+        setTitle(getArmyName() + this.getResources().getString(R.string.editMode) + " " + number + " " +
+                ((number != 1) ? getResources().getString(R.string.rows) : getResources().getString(R.string.row)));
     }
 
     public void deleteRow(View view) {

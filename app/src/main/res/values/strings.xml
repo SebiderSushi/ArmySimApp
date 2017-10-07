@@ -9,10 +9,11 @@
     <string name="delete">Delete</string>
     <string name="delete_confirm">"The following armies are going to be DELETED:"</string>
     <string name="delete_confirm_all">"ALL armies are going to be DELETED!"</string>
-    <string name="cancel">Cancel</string>
-    <string name="editing">"Editing "</string>
+    <string name="error">Error</string>
+    <string name="editing">"Editing %s"</string>
     <string name="editMode">" (Edit Mode)"</string>
     <string name="row">"Row"</string>
+    <string name="rows">"Rows"</string>
     <string name="indexOutOfRange">"Can't move to Row "</string>
     <string name="button_move_up">Up</string>
     <string name="button_move_down">Down</string>
@@ -39,22 +40,24 @@
     <string name="sim_randomness">Randomness</string>
     <string name="randomness_on">Randomness activated.</string>
     <string name="randomness_off">Randomness deactivated.</string>
-    <string name="echo_tie">Tie</string>
+    <!--string name="echo_tie">\t\t\t\tTie \t(%d)</string-->
+    <string name="echo_tie">Tie (%d)</string>
     <string name="echo_ties">"Ties: "</string>
     <string name="echo_total">"Total: "</string>
     <string name="echo_noArmies">"No Armies checked."</string>
-    <string name="echo_win_winInRound">" wins in round "</string>
-    <string name="echo_win_w">" with "</string>
-    <string name="echo_win_row">" row"</string>
-    <string name="echo_win_plural">s</string>
-    <string name="echo_win_left">" left."</string>
+    <!--string name="echo_winInRound_singular" formatted="false">"%s \t\twins in round %d with 1 row left. \t\t(%d)"</string>
+    <string name="echo_winInRound_plural" formatted="false">"%s \t\twins in round %d with %d rows left. \t(%d)"</string-->
+    <string name="echo_winInRound_singular" formatted="false">"%s wins in round %d with 1 row left. (%d)"</string>
+    <string name="echo_winInRound_plural" formatted="false">"%s wins in round %d with %d rows left. (%d)"</string>
+    <string name="echo_duration">"Duration: %dms"</string>
+    <string name="echo_cancelled_duration">"Cancelled: Duration: %dms"</string>
     <string name="error_could_not_get_army">"Error: Could not get this Army!"</string>
     <string name="export">Export</string>
     <string name="checkAll">"Check All"</string>
     <string name="invert">Invert</string>
     <string name="export_done">"Export done"</string>
     <string name="export_not_writable">"Storage NOT writable!"</string>
-    <string name="export_could_not_save">" could NOT be saved! (Write Error)"</string>
+    <string name="export_could_not_save">"%s could NOT be saved! (Write Error)"</string>
     <string name="share">Share</string>
     <string name="copied_to_clipboard">Selected Armies copied to clipboard</string>
     <string name="text">Text</string>

@@ -6,10 +6,11 @@
     <string name="delete">Löschen</string>
     <string name="delete_confirm">"Die folgenden Armeen werden GELÖSCHT:"</string>
     <string name="delete_confirm_all">"ALLE Armeen werden GELÖSCHT!"</string>
-    <string name="cancel">Abbrechen</string>
-    <string name="editing">"Bearbeiten: "</string>
+    <string name="error">Fehler</string>
+    <string name="editing">"Bearbeiten: %s"</string>
     <string name="editMode">" (Bearbeiten)"</string>
     <string name="row">"Reihe"</string>
+    <string name="rows">"Reihen"</string>
     <string name="indexOutOfRange">"Kann nicht verschieben nach Reihe "</string>
     <string name="button_move_up">Auf</string>
     <string name="button_move_down">Ab</string>
@@ -19,7 +20,7 @@
     <string name="toast_save_failed">": Fehler beim Speichern!"</string>
     <string name="button_saveArmy">Speichern</string>
     <string name="button_saveArmy_and_exit">"Speichern &amp; Schließen"</string>
-    <string name="button_newSimulation">"Simulation"</string>
+    <string name="button_newSimulation">"Simulieren"</string>
     <string name="button_runSim">Start</string>
     <string name="button_addRow">Neue Reihe</string>
     <string name="attribute_attack">Angriff:</string>
@@ -33,22 +34,24 @@
     <string name="sim_randomness">Zufälligkeit</string>
     <string name="randomness_on">Zufälligkeit aktiviert.</string>
     <string name="randomness_off">Zufälligkeit deaktiviert.</string>
-    <string name="echo_tie">"Gleichstand - alle tot ;("</string>
+    <!--string name="echo_tie">"\t\t\t\t\t\tGleichstand - alle tot ;( \t(%d)"</string-->
+    <string name="echo_tie">"Gleichstand - alle tot ;( (%d)"</string>
     <string name="echo_ties">"Gleichstände: "</string>
     <string name="echo_total">"Gesamt: "</string>
     <string name="echo_noArmies">"Keine Armeen ausgewählt."</string>
-    <string name="echo_win_winInRound">" gewinnt in Runde "</string>
-    <string name="echo_win_w">" mit "</string>
-    <string name="echo_win_row">" übrigen Reihe"</string>
-    <string name="echo_win_plural">"n"</string>
-    <string name="echo_win_left">"."</string>
+    <!--string name="echo_winInRound_singular" formatted="false">"%s \t\t\t\tgewinnt in Runde %d mit 1 übrigen Reihe. \t\t(%d)"</string>
+    <string name="echo_winInRound_plural" formatted="false">"%s \t\t\t\tgewinnt in Runde %d mit %d übrigen Reihen. \t(%d)"</string-->
+    <string name="echo_winInRound_singular" formatted="false">"%s gewinnt in Runde %d mit 1 übrigen Reihe. (%d)"</string>
+    <string name="echo_winInRound_plural" formatted="false">"%s gewinnt in Runde %d mit %d übrigen Reihen. (%d)"</string>
+    <string name="echo_cancelled_duration">"Abgebrochen: Dauer: %dms"</string>
+    <string name="echo_duration">"Dauer: %dms"</string>
     <string name="error_could_not_get_army">"Fehler: Diese Armee konnte nicht geladen werden!"</string>
-    <string name="export">"Export"</string>
+    <string name="export">"Exportieren"</string>
     <string name="checkAll">"Alle"</string>
     <string name="invert">"Umkehren"</string>
     <string name="export_done">"Export abgeschlossen"</string>
     <string name="export_not_writable">"Speicher NICHT schreibbar!"</string>
-    <string name="export_could_not_save">" konnte NICHT gespeichert werden! (Schreibfehler)"</string>
+    <string name="export_could_not_save">"%s konnte NICHT gespeichert werden! (Schreibfehler)"</string>
     <string name="share">Teilen</string>
     <string name="copied_to_clipboard">Ausgewählte Armeen in Zwischenablage kopiert</string>
     <string name="text">Text</string>

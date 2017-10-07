@@ -13,9 +13,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by sebi on 15.06.17.
@@ -23,18 +23,16 @@ import java.util.ArrayList;
 
 public class SetupSimulationActivity extends Activity {
 
-    private final Counter counter_global = new Counter();
+    private final Counter counter = new Counter();
     private final LinearLayout.LayoutParams echoParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-    SimulationAsyncTask asyncTask = null;
-    Simulation sim;
-    //List<AsyncTask> asyncTasks = new ArrayList<>();
     ProgressBar progressBar;
+    private SimulationAsyncTask asyncTask = null;
+    private Simulation sim;
     private ArrayList<String> armyNames;
-    private String[] armies;
     private CheckBox checkbox_randomness;
     private EditText edit_iterations;
     private LinearLayout echoView;
-    private TextView tv_global;
+    private TextView tv_counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +42,11 @@ public class SetupSimulationActivity extends Activity {
         echoView = (LinearLayout) findViewById(R.id.echoView);
         edit_iterations = (EditText) findViewById(R.id.editText_sim_iterations);
         checkbox_randomness = (CheckBox) findViewById(R.id.checkbox_randomness);
-        tv_global = (TextView) findViewById(R.id.tv_global);
+        tv_counter = (TextView) findViewById(R.id.tv_global);
 
         Intent intent = getIntent();
         armyNames = intent.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAMES);
-        armies = new String[armyNames.size()];
+        String[] armies = new String[armyNames.size()];
 
         //iterate through armynames and get each armystring from file
         SharedPreferences prefs_armies = this.getSharedPreferences(MainActivity.PREFERENCES_ARMIES, Context.MODE_PRIVATE);
@@ -60,32 +58,40 @@ public class SetupSimulationActivity extends Activity {
         SharedPreferences sharedPrefs = this.getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
         checkbox_randomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
 
-        progressBar = findViewById(R.id.progress);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
 
         for (String armyName : armyNames)
-            counter_global.armyWins.put(armyName, 0);
+            counter.armyWins.put(armyName, 0);
         onCounterChanged();
     }
 
-    public void cancel(View v) {
-        //for (AsyncTask asyncTask : asyncTasks)
-        asyncTask.cancel(true);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        cancel(null);
+        finish();
     }
 
-    public TextView echo(String color, String text) {
+    public void cancel(View v) {
+        if (asyncTask != null)
+            asyncTask.cancel(true);
+    }
+
+    public void echo(String color, String text) {
         TextView echo;
-        if (echoView.getChildCount() >= 1000) {
-            echo = (TextView) echoView.getChildAt(999);
-            echoView.removeViewAt(999);
+        if (echoView.getChildCount() >= 100) {
+            echo = (TextView) echoView.getChildAt(99);
+            echoView.removeViewAt(99);
         } else {
             echo = new TextView(this);
         }
         echo.setText(text);
         if (color != null)
             echo.setTextColor(Color.parseColor(color));
+        else
+            echo.setTextColor(Color.WHITE);
         echo.setLayoutParams(echoParams);
         echoView.addView(echo, 0);
-        return echo;
     }
 
     public void echoRandomness(View view) {
@@ -97,7 +103,7 @@ public class SetupSimulationActivity extends Activity {
     }
 
     private Simulation loadSim(String[] armies) {
-        Simulation sim = new Simulation(counter_global);
+        Simulation sim = new Simulation(counter);
         //iterate through armystrings
         for (int i = 0; i < armies.length; i++) {
             String armyString = armies[i];
@@ -125,8 +131,6 @@ public class SetupSimulationActivity extends Activity {
 
     public void startSimulation(View view) {
         if (asyncTask == null || asyncTask.getStatus() == AsyncTask.Status.FINISHED) {
-            TextView echoTextView = echo(null, "Simulation in progress...");
-            echoTextView.setMinLines(2);
             sim.useRandom = checkbox_randomness.isChecked();
             String str_iterations = edit_iterations.getText().toString();
             int iterations = 1;
@@ -134,80 +138,60 @@ public class SetupSimulationActivity extends Activity {
                 iterations = Integer.parseInt(str_iterations);
             progressBar.setMax(iterations);
             progressBar.setProgress(0);
-            asyncTask = new SimulationAsyncTask(sim, this, echoTextView, iterations, counter_global);
+            asyncTask = new SimulationAsyncTask(this, sim, iterations);
             asyncTask.execute();
-            Toast.makeText(this, "Simulation started", Toast.LENGTH_SHORT).show();
-        } else
-            Toast.makeText(this, "Already running", Toast.LENGTH_SHORT).show();
-        //asyncTasks.add(asyncTask);
-        /*
-        echoTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                asyncTask.cancel(true);
-                view.setOnClickListener(null);
-            }
-        });
-        */
+            echo(null, "");
+        }
     }
 
     void onCounterChanged() {
-        String text = getResources().getString(R.string.echo_total) + counter_global.total
-                + " " + getResources().getString(R.string.echo_ties) + counter_global.ties;
-        for (String armyName : counter_global.armyWins.keySet()) {
-            Integer wins = counter_global.armyWins.get(armyName);
-            text += " " + armyName + ": " + ((wins != null) ? wins : "0");
-        }
-        tv_global.setText(text);
+        String text = getResources().getString(R.string.echo_total) + counter.total
+                + " " + getResources().getString(R.string.echo_ties) + counter.ties;
+        for (String armyName : armyNames)
+            text += " " + armyName + ": " + counter.armyWins.get(armyName);
+        tv_counter.setText(text);
     }
 }
 
 class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
 
-    private final TextView echoView;
-    private final Simulation sim;
     private final Context context;
     private final SetupSimulationActivity setupSimulationActivity;
-    private final Counter counter_global;
-    private int iterations;
-    private long start, end;
+    private final Simulation sim;
+    private final int iterations;
+    private final long start;
 
-    SimulationAsyncTask(Simulation sim, Context context, TextView echoView, int iterations, Counter counter_global) {
-        start = System.currentTimeMillis();
-        this.sim = sim;
+    SimulationAsyncTask(Context context, Simulation sim, int iterations) {
+        this.start = System.currentTimeMillis();
         this.context = context;
         this.setupSimulationActivity = (SetupSimulationActivity) context;
-        this.echoView = echoView;
+        this.sim = sim;
         this.iterations = iterations;
-        this.counter_global = counter_global;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        echoView.setText("");
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        for (int i = 0; i < iterations; i++) {
-            if (this.isCancelled())
-                return null;
+        for (int i = 0; i < iterations && !isCancelled(); i++) {
             sim.simulate();
-            String result = "Error";
+            String result = context.getString(R.string.error);
             if (sim.armies.size() == 1) {
                 int rowsLeft = sim.armies.get(0).rows.size();
                 String name = sim.armies.get(0).name;
-                result = name + context.getResources().getString(R.string.echo_win_winInRound)
-                        + sim.round + context.getResources().getString(R.string.echo_win_w) + rowsLeft
-                        + context.getResources().getString(R.string.echo_win_row)
-                        + (rowsLeft == 1 ? "" : context.getResources().getString(R.string.echo_win_plural))
-                        + context.getResources().getString(R.string.echo_win_left)
-                        + " (" + sim.counter.armyWins.get(name) + ")";
+                if (rowsLeft == 1)
+                    result = context.getString(R.string.echo_winInRound_singular,
+                            name,
+                            sim.round,
+                            sim.counter.armyWins.get(name));
+                else
+                    result = context.getString(R.string.echo_winInRound_plural,
+                            name,
+                            sim.round,
+                            rowsLeft,
+                            sim.counter.armyWins.get(name));
             }
             if (sim.armies.size() == 0)
-                result = context.getResources().getString(R.string.echo_tie) + " (" + sim.counter.ties + ")";
-            publishProgress(result, Integer.toString(i+1));
+                result = context.getResources().getString(R.string.echo_tie, sim.counter.ties);
+            publishProgress(result, Integer.toString(i + 1));
         }
         return null;
     }
@@ -223,29 +207,16 @@ class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        /*
-        counter_global.total += sim.counter.total;
-        counter_global.ties += sim.counter.ties;
-        String text = "\n" + context.getResources().getString(R.string.echo_total) + sim.counter.total
-                + " " + context.getResources().getString(R.string.echo_ties) + sim.counter.ties;
-        for (String armyName : sim.counter.armyWins.keySet()) {
-            Integer wins = sim.counter.armyWins.get(armyName);
-            Integer wins_global = counter_global.armyWins.get(armyName);
-            counter_global.armyWins.put(armyName, ((wins_global != null) ? wins_global : 0) + ((wins != null) ? wins : 0));
-            text += " " + armyName + ": " + ((wins != null) ? wins : "0");
-        }
-        */
-        setupSimulationActivity.onCounterChanged();
-        end = System.currentTimeMillis();
-        setupSimulationActivity.echo(null, "Duration: " + Long.toString(end - start) + "ms");
-        //setupSimulationActivity.asyncTasks.remove(this);
+        long end = System.currentTimeMillis();
+        setupSimulationActivity.echo(null,
+                        String.format(Locale.getDefault(), context.getString(R.string.echo_duration), end - start));
     }
 
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        end = System.currentTimeMillis();
-        setupSimulationActivity.echo(null, "Cancelled: Duration: " + Long.toString(end - start) + "ms");
-        //setupSimulationActivity.asyncTasks.remove(this);
+        long end = System.currentTimeMillis();
+        setupSimulationActivity.echo(null,
+                        String.format(Locale.getDefault(), context.getString(R.string.echo_cancelled_duration), end - start));
     }
 }

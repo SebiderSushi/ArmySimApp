@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String armyName = (String) listView.getItemAtPosition(position);
-                toast(MainActivity.this.getText(R.string.editing) + armyName);
+                toast(getString(R.string.editing, armyName));
                 startArmySetup(armyName, true, -1);
             }
         });
@@ -237,7 +237,7 @@ public class MainActivity extends Activity {
     public void deleteButton(View view) {
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() > 0) {
-            String cancel = getString(R.string.cancel);
+            String cancel = getString(android.R.string.cancel);
             String delete = getString(R.string.delete);
             String body;
             if (allChecked) {
@@ -329,7 +329,7 @@ public class MainActivity extends Activity {
             for (String armyName : armies) {
                 String saveText = saveTextHead + "\n" + prefs_armies.getString(armyName, getString(R.string.error_could_not_get_army));
                 if (!saveTextToFile(new File(exportpath, armyName + ".txt"), saveText))
-                    toast(armyName + getString(R.string.export_could_not_save));
+                    toast(getString(R.string.export_could_not_save, armyName));
             }
             toast(getString(R.string.export_done));
         }
