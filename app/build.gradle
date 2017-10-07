@@ -15,7 +15,7 @@ android {
         minSdkVersion 4
         targetSdkVersion 23
         versionCode 1
-        versionName "beta09"
+        versionName "beta10"
         archivesBaseName = "ArmySim_${versionName}_${getGitHash()}"
     }
     buildTypes {
