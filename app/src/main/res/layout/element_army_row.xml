@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="15dp">
 
     <LinearLayout
         android:id="@+id/armyRow_ll_attributes"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/armyRow_ll_buttons"
-        android:layout_toStartOf="@+id/armyRow_ll_buttons"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <LinearLayout
@@ -43,7 +42,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:hint="@string/attribute_default_AttackSpeed"
                 android:text="@string/attribute_attack"
                 android:textSize="18sp" />
 
@@ -51,7 +49,26 @@
                 android:id="@+id/editText_attack"
                 android:layout_width="@dimen/editText_attribute"
                 android:layout_height="wrap_content"
-                android:hint="@string/attribute_default_RoundsAfterDeath"
+                android:inputType="numberSigned" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/attribute_lives"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editText_lives"
+                android:layout_width="@dimen/editText_attribute"
+                android:layout_height="wrap_content"
                 android:inputType="numberSigned" />
         </LinearLayout>
 
@@ -72,8 +89,7 @@
                 android:id="@+id/editText_defense"
                 android:layout_width="@dimen/editText_attribute"
                 android:layout_height="wrap_content"
-                android:hint="@string/attribute_default_RoundsAfterDeath"
-                android:inputType="numberSigned" />
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout
@@ -93,7 +109,6 @@
                 android:id="@+id/editText_attackSpeed"
                 android:layout_width="@dimen/editText_attribute"
                 android:layout_height="wrap_content"
-                android:hint="@string/attribute_default_AttackSpeed"
                 android:inputType="numberSigned" />
         </LinearLayout>
 
@@ -114,7 +129,26 @@
                 android:id="@+id/editText_roundsAfterDeath"
                 android:layout_width="@dimen/editText_attribute"
                 android:layout_height="wrap_content"
-                android:hint="@string/attribute_default_RoundsAfterDeath"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/attribute_reach"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/editText_reach"
+                android:layout_width="@dimen/editText_attribute"
+                android:layout_height="wrap_content"
                 android:inputType="number" />
         </LinearLayout>
 
@@ -141,9 +175,7 @@
     <LinearLayout
         android:id="@+id/armyRow_ll_buttons"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <Button
@@ -169,7 +201,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="40dp" />
+            android:layout_height="80dp" />
 
         <Button
             android:id="@+id/button_deleteRow"
@@ -178,4 +210,4 @@
             android:onClick="deleteRow"
             android:text="@string/delete" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

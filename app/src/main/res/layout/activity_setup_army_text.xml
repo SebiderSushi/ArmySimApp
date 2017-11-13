@@ -1,67 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
     tools:context="me.sebi.armysim.SetupArmyActivity">
 
-    <LinearLayout
-        android:id="@+id/armySetup_ll_Buttons"
+    <EditText
+        android:id="@+id/editText_armyName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="switchToGUIMode"
-            android:text="@string/editor" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="saveArmyButton"
-            android:text="@string/button_saveArmy" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="saveExitButton"
-            android:text="@string/button_saveArmy_and_exit" />
-    </LinearLayout>
+        android:hint="@string/name"
+        android:inputType="text" />
 
     <ScrollView
         android:id="@+id/armySetup_sv_rowBox"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/armySetup_ll_Buttons"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/editText_armyString"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/editText_armyName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/name"
-                android:inputType="text" />
-
-            <EditText
-                android:id="@+id/editText_armyString"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine" />
-        </LinearLayout>
+            android:inputType="textMultiLine" />
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

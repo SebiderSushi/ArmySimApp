@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="me.sebi.armysim.MainActivity">
+    tools:context="me.sebi.armysim.ArmyListActivity">
 
     <ListView
         android:id="@+id/lv_armies"
@@ -75,19 +75,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="shareSelectedArmies"
-                android:text="@string/share" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="exportSelectedArmiesButton"
-                android:text="@string/export" />
 
             <Button
                 android:layout_width="0dp"
@@ -102,26 +89,6 @@
                 android:layout_weight="1.1"
                 android:onClick="invertChecks"
                 android:text="@string/invert" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="copySelectedArmies"
-                android:text="@string/copy" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:onClick="deleteButton"
-                android:text="@string/delete" />
 
             <Button
                 android:layout_width="0dp"
@@ -131,5 +98,4 @@
                 android:text="@string/button_newSimulation" />
         </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

@@ -10,15 +10,26 @@ class Army {
     final ArrayList<Row> rows = new ArrayList<>();
     final String name;
     final Simulation containingSimulation;
-    private final ArrayList<Row> rows_orig = new ArrayList<>();
+    final ArrayList<Row> rows_orig = new ArrayList<>();
     private final ArrayList<Row> distanceFighterRows = new ArrayList<>();
     private final ArrayList<Row> distanceFighterRows_orig = new ArrayList<>();
 
     Army(String name, Simulation containingSimulation) {
         this.name = name;
         this.containingSimulation = containingSimulation;
-        this.containingSimulation.armies_orig.add(this);
-        this.containingSimulation.counter.armyWins.put(name, 0);
+        if (containingSimulation != null) {
+            this.containingSimulation.armies_orig.add(this);
+            this.containingSimulation.counter.armyWins.put(name, 0);
+        }
+    }
+
+    Army(String name, Simulation containingSimulation, String armyString) {
+        this(name, containingSimulation);
+
+        String[] armyRows = armyString.replace("\n", "").split(";");
+        for (String rowString : armyRows) {
+            this.addRow(new Row(rowString));
+        }
     }
 
     void addRow(Row row) {
@@ -74,10 +85,12 @@ class Army {
             aAtk *= 1 + 0.5 * Math.random();
             bDef *= 1 + 0.5 * Math.random();
         }
-        attackedRow.lives -= aAtk - bDef;
+        if (aAtk > bDef) // Prevent healing
+            attackedRow.lives -= aAtk - bDef;
     }
 
     void distanceAttack(Army enemy) {
+        //TODO correct reach implementation
         Row firstRow = this.rows.get(0);
         int enemyRowCount = enemy.rows.size();
         for (Row distanceFighter : this.distanceFighterRows) {

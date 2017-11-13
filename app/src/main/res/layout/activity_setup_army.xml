@@ -1,65 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="me.sebi.armysim.SetupArmyActivity">
 
     <EditText
         android:id="@+id/armySetup_et_armyName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:hint="@string/name"
         android:inputType="text" />
 
-    <ScrollView
-        android:id="@+id/armySetup_sv_rowBox"
+    <ListView
+        android:id="@+id/armySetup_lv_rowBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/armySetup_ll_Buttons"
-        android:layout_below="@+id/armySetup_et_armyName">
-
-        <LinearLayout
-            android:id="@+id/armySetup_ll_rowBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/armySetup_ll_Buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="addRow"
-            android:text="@string/button_addRow" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:onClick="switchToTextMode"
-            android:text="@string/text" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.05"
-            android:onClick="saveButton"
-            android:text="@string/button_saveArmy" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.15"
-            android:onClick="saveExitButton"
-            android:text="@string/button_saveArmy_and_exit" />
-    </LinearLayout>
-</RelativeLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fastScrollEnabled="true" />
+</LinearLayout>

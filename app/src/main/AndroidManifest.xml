@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".ArmyListActivity"
             android:windowSoftInputMode="stateHidden"
             android:configChanges="orientation">
             <intent-filter>
@@ -20,7 +20,7 @@
         </activity>
         <activity
             android:name=".SetupArmyActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".SetupArmyStringActivity"
             android:windowSoftInputMode="stateHidden" />

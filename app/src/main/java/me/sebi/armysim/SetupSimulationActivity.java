@@ -45,18 +45,18 @@ public class SetupSimulationActivity extends Activity {
         tv_counter = (TextView) findViewById(R.id.tv_global);
 
         Intent intent = getIntent();
-        armyNames = intent.getStringArrayListExtra(MainActivity.EXTRA_MESSAGE_ARMY_NAMES);
+        armyNames = intent.getStringArrayListExtra(ArmyListActivity.EXTRA_MESSAGE_ARMY_NAMES);
         String[] armies = new String[armyNames.size()];
 
         //iterate through armynames and get each armystring from file
-        SharedPreferences prefs_armies = this.getSharedPreferences(MainActivity.PREFERENCES_ARMIES, Context.MODE_PRIVATE);
+        SharedPreferences prefs_armies = this.getSharedPreferences(ArmyListActivity.PREFERENCES_ARMIES, Context.MODE_PRIVATE);
         for (int i = 0; i < armyNames.size(); i++)
             armies[i] = prefs_armies.getString(armyNames.get(i), this.getResources().getString(R.string.namelessArmy));
 
         sim = loadSim(armies);
 
-        SharedPreferences sharedPrefs = this.getSharedPreferences(MainActivity.PREFERENCES, Context.MODE_PRIVATE);
-        checkbox_randomness.setChecked(sharedPrefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
+        SharedPreferences sharedPrefs = this.getSharedPreferences(ArmyListActivity.PREFERENCES, Context.MODE_PRIVATE);
+        checkbox_randomness.setChecked(sharedPrefs.getBoolean(ArmyListActivity.KEY_RANDOMNESS, true));
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
 
@@ -107,24 +107,8 @@ public class SetupSimulationActivity extends Activity {
         //iterate through armystrings
         for (int i = 0; i < armies.length; i++) {
             String armyString = armies[i];
-            String[] armyRows = armyString.replace("\n", "").split(";");
             //create army with name and add to simulation
-            Army army = new Army(armyNames.get(i), sim);
-            //iterate through rows and add to army
-            for (String armyRow : armyRows) {
-                String[] attributes = armyRow.split(",");
-                Row row = new Row(
-                        (attributes.length > 1) && !(attributes[1].equals("")) ? Integer.parseInt(attributes[1]) : 0,
-                        (attributes.length > 2) && !(attributes[2].equals("")) ? Integer.parseInt(attributes[2]) : 0,
-                        (attributes.length > 8) && !(attributes[8].equals("")) ? Integer.parseInt(attributes[8]) : 0,
-                        (attributes.length > 3) && !(attributes[3].equals("")) ? Integer.parseInt(attributes[3]) : 0,
-                        (attributes.length > 4) && !(attributes[4].equals("")) ? Integer.parseInt(attributes[4]) : 0,
-                        (attributes.length > 5) && (attributes[5].equals("1")),
-                        (attributes.length > 6) && !(attributes[6].equals("0")),
-                        (attributes.length > 7) && (attributes[7].equals("1")),
-                        (attributes.length > 9) && !(attributes[9].equals("")) ? Integer.parseInt(attributes[9]) : 0);
-                army.addRow(row);
-            }
+            new Army(armyNames.get(i), sim, armyString);
         }
         return sim;
     }

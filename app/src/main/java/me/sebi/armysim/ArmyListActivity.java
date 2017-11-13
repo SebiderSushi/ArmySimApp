@@ -14,23 +14,27 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class MainActivity extends Activity {
+public class ArmyListActivity extends Activity {
 
     public final static String EXTRA_MESSAGE_ARMY_NAME = "me.sebi.armysim.ARMYNAME";
     public final static String EXTRA_MESSAGE_ARMY_NAMES = "me.sebi.armysim.ARMIES";
@@ -45,12 +49,12 @@ public class MainActivity extends Activity {
     private final static int PERMISSION_REQUEST_EXPORT_ARMIES = 1;
     private final int sdk = Integer.parseInt(Build.VERSION.SDK);
     private final String exportpath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ArmySim";
-    private ListView listView;
+    private final ArmyListSortByNameComparator nameComparator = new ArmyListSortByNameComparator();
     private SharedPreferences prefs, prefs_armies;
     private CheckBox checkbox_randomness;
     private boolean allChecked;
-    private ArrayAdapter<String> adapter;
-    private ArrayList<String> armyNames;
+    private ArmyListAdapter adapter;
+    private List<ArmyListViewEntryData> armyList = new ArrayList<>();
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static boolean saveTextToFile(File path, String text) {
@@ -83,28 +87,21 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_army_list);
 
         prefs = this.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         prefs_armies = this.getSharedPreferences(PREFERENCES_ARMIES, Context.MODE_PRIVATE);
-        checkbox_randomness = (CheckBox) findViewById(R.id.checkbox_default_randomness);
+        checkbox_randomness = findViewById(R.id.checkbox_default_randomness);
 
-        checkbox_randomness.setChecked(prefs.getBoolean(MainActivity.KEY_RANDOMNESS, true));
+        checkbox_randomness.setChecked(prefs.getBoolean(ArmyListActivity.KEY_RANDOMNESS, true));
 
-        listView = (ListView) findViewById(R.id.lv_armies);
-
-        armyNames = getAllArmyNames();
-        Collections.sort(armyNames);
-
-        adapter = new ArrayAdapter<>(this,
-                R.layout.element_listview_army,
-                R.id.textView_listViewElem_armyName,
-                armyNames);
+        ListView listView = findViewById(R.id.lv_armies);
+        adapter = new ArmyListAdapter(this, armyList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String armyName = (String) listView.getItemAtPosition(position);
+                String armyName = armyList.get(position).armyName;
                 toast(getString(R.string.editing, armyName));
                 startArmySetup(armyName, true, -1);
             }
@@ -112,11 +109,50 @@ public class MainActivity extends Activity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String armyName = (String) listView.getItemAtPosition(position);
-                toast("Rename" + armyName);
+                String armyName = armyList.get(position).armyName;
+                toast("Rename " + armyName);
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_army_list_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_armylist_checkAll:
+                checkAllArmies(null);
+                return true;
+            case R.id.menu_armylist_copy:
+                copySelectedArmies();
+                return true;
+            case R.id.menu_armylist_delete:
+                deleteButton();
+                return true;
+            case R.id.menu_armylist_export:
+                exportSelectedArmiesButton();
+                return true;
+            case R.id.menu_armylist_invert:
+                invertChecks(null);
+                return true;
+            case R.id.menu_armylist_runSim:
+                startSimulationSetup(null);
+                return true;
+            case R.id.menu_armylist_share:
+                shareSelectedArmies();
+                return true;
+            case R.id.menu_armylist_create:
+                new CreateArmyDialog(this).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -147,38 +183,52 @@ public class MainActivity extends Activity {
     }
 
     private void refreshListView() {
-        armyNames.clear();
-        armyNames.addAll(getAllArmyNames());
-        Collections.sort(armyNames);
-        adapter.notifyDataSetChanged();
-    }
-
-    private ArrayList<String> getAllArmyNames() {
-        ArrayList<String> armyNames = new ArrayList<>();
-
+        boolean found;
+        ArmyListViewEntryData data;
+        Iterator<ArmyListViewEntryData> armyListIterator = armyList.iterator();
+        ArrayList<ArmyListViewEntryData> trash = new ArrayList<>();
         Map<String, ?> allEntries = prefs_armies.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            armyNames.add(entry.getKey());
-        }
+        Iterator<String> allEntriesIterator;
 
-        return armyNames;
+        while (armyListIterator.hasNext()) {
+            data = armyListIterator.next();
+            found = false;
+            allEntriesIterator = allEntries.keySet().iterator();
+            while (allEntriesIterator.hasNext()) {
+                String entry = allEntriesIterator.next();
+                if (entry.equals(data.armyName)) {
+                    found = true;
+                    allEntriesIterator.remove();
+                    break;
+                }
+            }
+            if (!found) {
+                armyListIterator.remove();
+                trash.add(data);
+            }
+        }
+        Iterator<ArmyListViewEntryData> trashRecycler = trash.iterator();
+        allEntriesIterator = allEntries.keySet().iterator();
+        while (trashRecycler.hasNext() && allEntriesIterator.hasNext()) {
+            data = trashRecycler.next();
+            data.armyName = allEntriesIterator.next();
+            data.checked = false;
+            armyList.add(data);
+        }
+        while (allEntriesIterator.hasNext())
+            armyList.add(new ArmyListViewEntryData(allEntriesIterator.next()));
+        Collections.sort(armyList, nameComparator);
+        adapter.notifyDataSetChanged();
     }
 
     private ArrayList<String> getCheckedArmies() {
         ArrayList<String> armies = new ArrayList<>(0);
 
-        ListView lv = (ListView) findViewById(R.id.lv_armies);
-        View v;
-        CheckBox box;
-        TextView name;
         allChecked = true;
-        for (int i = 0; i < lv.getChildCount(); i++) {
-            v = lv.getChildAt(i);
-            box = (CheckBox) v.findViewById(R.id.checkbox_listViewElem);
-            if (box.isChecked()) {
-                name = (TextView) v.findViewById(R.id.textView_listViewElem_armyName);
-                armies.add(name.getText().toString());
-            } else
+        for (ArmyListViewEntryData data : armyList) {
+            if (data.checked)
+                armies.add(data.armyName);
+            else
                 allChecked = false;
         }
 
@@ -188,25 +238,15 @@ public class MainActivity extends Activity {
     }
 
     public void checkAllArmies(View view) {
-        ListView lv = (ListView) findViewById(R.id.lv_armies);
-        View v;
-        CheckBox box;
-        for (int i = 0; i < lv.getChildCount(); i++) {
-            v = lv.getChildAt(i);
-            box = (CheckBox) v.findViewById(R.id.checkbox_listViewElem);
-            box.setChecked(true);
-        }
+        for (ArmyListViewEntryData data : armyList)
+            data.checked = true;
+        adapter.notifyDataSetChanged();
     }
 
     public void invertChecks(View view) {
-        ListView lv = (ListView) findViewById(R.id.lv_armies);
-        View v;
-        CheckBox box;
-        for (int i = 0; i < lv.getChildCount(); i++) {
-            v = lv.getChildAt(i);
-            box = (CheckBox) v.findViewById(R.id.checkbox_listViewElem);
-            box.setChecked(!box.isChecked());
-        }
+        for (ArmyListViewEntryData data : armyList)
+            data.checked = !data.checked;
+        adapter.notifyDataSetChanged();
     }
 
     public void saveRandomness(View view) {
@@ -216,8 +256,8 @@ public class MainActivity extends Activity {
     }
 
     public void createArmy(View view) {
-        EditText editText_name = (EditText) findViewById(R.id.editText_create_name);
-        EditText editText_rowCount = (EditText) findViewById(R.id.editText_create_rowCount);
+        EditText editText_name = findViewById(R.id.editText_create_name);
+        EditText editText_rowCount = findViewById(R.id.editText_create_rowCount);
         String name = editText_name.getText().toString();
         String str_rowCount = editText_rowCount.getText().toString();
         int rowCount = 1;
@@ -234,7 +274,7 @@ public class MainActivity extends Activity {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
-    public void deleteButton(View view) {
+    public void deleteButton() {
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() > 0) {
             String cancel = getString(android.R.string.cancel);
@@ -286,17 +326,22 @@ public class MainActivity extends Activity {
     }
 
     private String selectedArmiesToString() {
-        String armyString = saveTextHead;
+        StringBuilder sb = new StringBuilder();
+        sb.append(saveTextHead);
         ArrayList<String> armies = getCheckedArmies();
         if (armies.size() > 0) {
-            for (String armyName : armies)
-                armyString = armyString + "\n\n" + armyName + "\n" + prefs_armies.getString(armyName, getString(R.string.error_could_not_get_army));
-            return armyString;
+            for (String armyName : armies) {
+                sb.append("\n\n");
+                sb.append(armyName);
+                sb.append("\n");
+                sb.append(prefs_armies.getString(armyName, getString(R.string.error_could_not_get_army)));
+            }
+            return sb.toString();
         }
         return null;
     }
 
-    public void copySelectedArmies(View view) {
+    public void copySelectedArmies() {
         String saveText = selectedArmiesToString();
         if (saveText != null) {
             copyToClipboard(this, saveText);
@@ -304,9 +349,13 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void shareSelectedArmies(View view) {
+    public void shareSelectedArmies() {
         String saveText = selectedArmiesToString();
         if (saveText != null) {
+            if (saveText.length() > 64000) {
+                toast(getString(R.string.toast_too_much_data));
+                return;
+            }
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT, saveText);
@@ -315,7 +364,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void exportSelectedArmiesButton(View view) {
+    public void exportSelectedArmiesButton() {
         if (sdk < 23 || checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, PERMISSION_REQUEST_EXPORT_ARMIES))
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
                 exportSelectedArmies();
@@ -341,6 +390,39 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, SetupSimulationActivity.class);
             intent.putExtra(EXTRA_MESSAGE_ARMY_NAMES, armies);
             startActivity(intent);
+        }
+    }
+
+    class CreateArmyDialog extends AlertDialog.Builder {
+        View rootView;
+
+        CreateArmyDialog(Context context) {
+            super(context);
+            final ArmyListActivity armyListActivity = (ArmyListActivity) context;
+            context = armyListActivity.getApplicationContext();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            rootView = inflater.inflate(R.layout.dialog_army_create, null);
+            setView(rootView);
+            setPositiveButton(context.getString(R.string.create), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    createArmy();
+                }
+
+            });
+            setNeutralButton(context.getString(android.R.string.cancel), null);
+        }
+
+        void createArmy() {
+            EditText editText_name = rootView.findViewById(R.id.editText_create_name);
+            EditText editText_rowCount = rootView.findViewById(R.id.editText_create_rowCount);
+            String name = editText_name.getText().toString();
+            String str_rowCount = editText_rowCount.getText().toString();
+            int rowCount = 1;
+            if (!str_rowCount.equals(""))
+                rowCount = Integer.parseInt(str_rowCount);
+
+            startArmySetup(name, prefs_armies.contains(name), rowCount);
         }
     }
 }

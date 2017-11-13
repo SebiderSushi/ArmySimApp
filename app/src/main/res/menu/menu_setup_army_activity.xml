@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_newRow"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="always"
+        android:title="@string/button_addRow" />
+    <item
+        android:id="@+id/menu_text"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:showAsAction="always"
+        android:title="@string/text" />
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@android:drawable/ic_menu_save"
+        android:showAsAction="always"
+        android:title="@string/button_saveArmy" />
+    <item
+        android:id="@+id/menu_saveExit"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:showAsAction="always"
+        android:title="@string/button_saveArmy_and_exit" />
+</menu>
