@@ -19,9 +19,13 @@
     <string name="button_move_down">Down</string>
     <string name="button_move_to">Move to</string>
     <string name="namelessArmy">Nameless Army</string>
-    <string name="toast_saved">" saved"</string>
-    <string name="toast_save_failed">": Saving FAILED!"</string>
+    <string name="toast_saved">"%s saved"</string>
+    <string name="toast_save_failed">"%s: Saving FAILED!"</string>
     <string name="toast_too_much_data">"The resulting text is too big! Try sharing less armies at once."</string>
+    <string name="toast_renamed">"%s renamed"</string>
+    <string name="toast_rename_failed">"%s: Renaming FAILED!"</string>
+    <string name="toast_copied" formatted="false">"%s copied to %s"</string>
+    <string name="toast_copy_failed">"%s: Copying FAILED!"</string>
     <string name="button_saveArmy">Save</string>
     <string name="button_saveArmy_and_exit">"Save &amp; Exit"</string>
     <string name="button_newSimulation">"Fight!"</string>
@@ -65,4 +69,6 @@
     <string name="editor">Editor</string>
     <string name="name">Name</string>
     <string name="toast_permissiondenied_storage">Storage permission required to export</string>
+    <string name="checkbox_keep_old_army">Keep original army</string>
+    <string name="renaming">"Renaming %s"</string>
 </resources>

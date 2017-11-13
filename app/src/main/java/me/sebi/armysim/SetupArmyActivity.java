@@ -188,11 +188,10 @@ public class SetupArmyActivity extends Activity {
         SharedPreferences.Editor editor = prefs_armies.edit();
         String armyName = getArmyName();
         editor.putString(armyName, getArmyString());
-        if (editor.commit()) {
-            toast(armyName + getResources().getString(R.string.toast_saved));
-        } else {
-            toast(armyName + getResources().getString(R.string.toast_save_failed));
-        }
+        if (editor.commit())
+            toast(String.format(getResources().getString(R.string.toast_saved), armyName));
+        else
+            toast(String.format(getResources().getString(R.string.toast_save_failed), armyName));
     }
 
     public void switchToTextMode(View view) {

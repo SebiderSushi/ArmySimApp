@@ -55,6 +55,7 @@ public class ArmyListActivity extends Activity {
     private boolean allChecked;
     private ArmyListAdapter adapter;
     private List<ArmyListViewEntryData> armyList = new ArrayList<>();
+    private Context context;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static boolean saveTextToFile(File path, String text) {
@@ -89,6 +90,7 @@ public class ArmyListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_army_list);
 
+        context = this;
         prefs = this.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         prefs_armies = this.getSharedPreferences(PREFERENCES_ARMIES, Context.MODE_PRIVATE);
         checkbox_randomness = findViewById(R.id.checkbox_default_randomness);
@@ -110,7 +112,7 @@ public class ArmyListActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 String armyName = armyList.get(position).armyName;
-                toast("Rename " + armyName);
+                new RenameArmyDialog(context, armyName).show();
                 return true;
             }
         });
@@ -279,13 +281,15 @@ public class ArmyListActivity extends Activity {
         if (armies.size() > 0) {
             String cancel = getString(android.R.string.cancel);
             String delete = getString(R.string.delete);
-            String body;
+            StringBuilder body = new StringBuilder();
             if (allChecked) {
-                body = getString(R.string.delete_confirm_all);
+                body.append(getString(R.string.delete_confirm_all));
             } else {
-                body = getString(R.string.delete_confirm);
-                for (String army : armies)
-                    body = body + "\n" + army;
+                body.append(getString(R.string.delete_confirm));
+                for (String army : armies) {
+                    body.append("\n");
+                    body.append(army);
+                }
             }
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -394,12 +398,10 @@ public class ArmyListActivity extends Activity {
     }
 
     class CreateArmyDialog extends AlertDialog.Builder {
-        View rootView;
+        private View rootView;
 
         CreateArmyDialog(Context context) {
             super(context);
-            final ArmyListActivity armyListActivity = (ArmyListActivity) context;
-            context = armyListActivity.getApplicationContext();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rootView = inflater.inflate(R.layout.dialog_army_create, null);
             setView(rootView);
@@ -423,6 +425,56 @@ public class ArmyListActivity extends Activity {
                 rowCount = Integer.parseInt(str_rowCount);
 
             startArmySetup(name, prefs_armies.contains(name), rowCount);
+        }
+    }
+
+    class RenameArmyDialog extends AlertDialog.Builder {
+        private View rootView;
+        private EditText editText_name;
+        private String armyName;
+
+        RenameArmyDialog(Context context, String armyName) {
+            super(context);
+            this.armyName = armyName;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            rootView = inflater.inflate(R.layout.dialog_army_rename, null);
+            setView(rootView);
+            setTitle(String.format(getResources().getString(R.string.renaming), armyName));
+            setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    renameArmy();
+                }
+
+            });
+            setNeutralButton(context.getString(android.R.string.cancel), null);
+            editText_name = rootView.findViewById(R.id.rename_editText_name);
+            editText_name.setText(armyName);
+            editText_name.setHint(armyName);
+        }
+
+        void renameArmy() {
+            CheckBox keepOriginal = rootView.findViewById(R.id.rename_checkbox_keep_original);
+            String newName = editText_name.getText().toString();
+
+            String armyString = prefs_armies.getString(armyName, "");
+            SharedPreferences.Editor editor = prefs_armies.edit();
+            editor.putString(newName, armyString);
+            if (keepOriginal.isChecked()) {
+                if (editor.commit()) {
+                    toast(String.format(getResources().getString(R.string.toast_copied), armyName, newName));
+                } else {
+                    toast(String.format(getResources().getString(R.string.toast_copy_failed), newName));
+                }
+            } else {
+                editor.remove(armyName);
+                if (editor.commit()) {
+                    toast(String.format(getResources().getString(R.string.toast_renamed), newName));
+                } else {
+                    toast(String.format(getResources().getString(R.string.toast_rename_failed), newName));
+                }
+            }
+            refreshListView();
         }
     }
 }

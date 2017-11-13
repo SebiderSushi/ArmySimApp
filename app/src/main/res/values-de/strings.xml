@@ -16,9 +16,13 @@
     <string name="button_move_down">Ab</string>
     <string name="button_move_to">Nach</string>
     <string name="namelessArmy">Namenlose Armee</string>
-    <string name="toast_saved">" gespeichert"</string>
-    <string name="toast_save_failed">": Fehler beim Speichern!"</string>
+    <string name="toast_saved">"%s gespeichert"</string>
+    <string name="toast_save_failed">"%s: Fehler beim Speichern!"</string>
     <string name="toast_too_much_data">"Der entstehende Text ist zu groß! Versuche, weniger Armeen auf einmal zu teilen."</string>
+    <string name="toast_renamed">"%s umbenannt"</string>
+    <string name="toast_rename_failed">"%s: Umbenennen fehlgeschlagen!"</string>
+    <string name="toast_copied" formatted="false">"%s kopiert nach %s"</string>
+    <string name="toast_copy_failed">"%s: Kopieren fehlgeschlagen!"</string>
     <string name="button_saveArmy">Speichern</string>
     <string name="button_saveArmy_and_exit">"Speichern &amp; Schließen"</string>
     <string name="button_newSimulation">"Simulieren"</string>
@@ -61,4 +65,6 @@
     <string name="editor">Editor</string>
     <string name="name">Name</string>
     <string name="toast_permissiondenied_storage">Speicherberechtigung zum exportieren benötigt</string>
+    <string name="checkbox_keep_old_army">Aktuelle Armee behalten</string>
+    <string name="renaming">"%s umbenennen"</string>
 </resources>

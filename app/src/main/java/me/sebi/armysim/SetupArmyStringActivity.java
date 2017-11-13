@@ -94,10 +94,9 @@ public class SetupArmyStringActivity extends Activity {
         SharedPreferences.Editor editor = sharedPrefs.edit();
         String armyName = editText_armyName.getText().toString();
         editor.putString(armyName, getArmyString());
-        if (editor.commit()) {
-            toast(armyName + getResources().getString(R.string.toast_saved));
-        } else {
-            toast(armyName + getResources().getString(R.string.toast_save_failed));
-        }
+        if (editor.commit())
+            toast(String.format(getResources().getString(R.string.toast_saved), armyName));
+        else
+            toast(String.format(getResources().getString(R.string.toast_save_failed), armyName));
     }
 }
