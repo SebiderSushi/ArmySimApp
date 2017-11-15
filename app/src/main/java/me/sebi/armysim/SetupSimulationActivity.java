@@ -163,7 +163,7 @@ class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         for (int i = 0; i < iterations && !isCancelled(); i++) {
-            sim.simulate();
+            sim.simulate(this);
             String result = context.getString(R.string.error);
             if (sim.armies.size() == 1) {
                 int rowsLeft = sim.armies.get(0).rows.size();

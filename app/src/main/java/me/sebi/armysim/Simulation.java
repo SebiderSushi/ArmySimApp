@@ -69,7 +69,7 @@ class Simulation {
         return sortedSpeedClasses;
     }
 
-    void simulate() {
+    void simulate(SimulationAsyncTask simulationAsyncTask) {
         reset();
         counter.total++;
         round = 0;
@@ -77,7 +77,7 @@ class Simulation {
         rmAllDead(round);
         if (gameOver())
             return;
-        while (true) {
+        while (!simulationAsyncTask.isCancelled()) {
             round += 1;
             for (Army attacker : armies)
                 for (Army enemy : armies)
