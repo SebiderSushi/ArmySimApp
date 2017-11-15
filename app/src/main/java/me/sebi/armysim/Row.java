@@ -5,38 +5,49 @@ package me.sebi.armysim;
  */
 class Row {
 
-    int attack, defense, roundsAfterDeath, attackSpeed, reach = 0;
-    int lives, deathRound = 0;
-    int lives_orig = 0;
-    boolean ATTACK_WEAKEST_ROW, DISTANCE_FIGHTER = false;
-    boolean DISTANCE_DAMAGE = true;
+    int attack, defense, roundsAfterDeath, attackSpeed, reach;
+    int lives, deathRound;
+    boolean ATTACK_WEAKEST_ROW, DISTANCE_FIGHTER, DISTANCE_DAMAGE;
+    private int lives_orig;
 
-    Row() {}
-
-    Row(int attack, int lives, int defense, int attackSpeed, int roundsAfterDeath,
-        boolean ATTACK_WEAKEST_ROW, boolean DISTANCE_DAMAGE, boolean DISTANCE_FIGHTER, int reach) {
-        this.attack = attack;
-        this.lives_orig = lives;
-        this.defense = defense;
-        this.attackSpeed = attackSpeed;
-        this.roundsAfterDeath = roundsAfterDeath;
-        this.ATTACK_WEAKEST_ROW = ATTACK_WEAKEST_ROW;
-        this.DISTANCE_DAMAGE = DISTANCE_DAMAGE;
-        this.DISTANCE_FIGHTER = DISTANCE_FIGHTER;
-        this.reach = reach;
+    Row() {
+        attack = defense = roundsAfterDeath = attackSpeed = reach = lives = deathRound = lives_orig = 0;
+        ATTACK_WEAKEST_ROW = DISTANCE_FIGHTER = false;
+        DISTANCE_DAMAGE = true;
     }
 
     Row(String rowString) {
+        this();
         String[] attributes = rowString.split(",");
-        this.attack = (attributes.length > 1) && !(attributes[1].equals("")) ? Integer.parseInt(attributes[1]) : 0;
-        this.lives_orig = (attributes.length > 2) && !(attributes[2].equals("")) ? Integer.parseInt(attributes[2]) : 0;
-        this.attackSpeed = (attributes.length > 3) && !(attributes[3].equals("")) ? Integer.parseInt(attributes[3]) : 0;
-        this.roundsAfterDeath = (attributes.length > 4) && !(attributes[4].equals("")) ? Integer.parseInt(attributes[4]) : 0;
-        this.ATTACK_WEAKEST_ROW = (attributes.length > 5) && (attributes[5].equals("1"));
-        this.DISTANCE_DAMAGE = (attributes.length > 6) && !(attributes[6].equals("0"));
-        this.DISTANCE_FIGHTER = (attributes.length > 7) && (attributes[7].equals("1"));
-        this.defense = (attributes.length > 8) && !(attributes[8].equals("")) ? Integer.parseInt(attributes[8]) : 0;
-        this.reach = (attributes.length > 9) && !(attributes[9].equals("")) ? Integer.parseInt(attributes[9]) : 0;
+        int length = attributes.length;
+        if (length > 9)
+            length = 10;
+        switch (length) {
+            case 10:
+                if (!attributes[9].equals(""))
+                    this.reach = Integer.parseInt(attributes[9]);
+            case 9:
+                if (!attributes[8].equals(""))
+                    this.defense = Integer.parseInt(attributes[8]);
+            case 8:
+                this.DISTANCE_FIGHTER = attributes[7].equals("1");
+            case 7:
+                this.DISTANCE_DAMAGE = !attributes[6].equals("0");
+            case 6:
+                this.ATTACK_WEAKEST_ROW = attributes[5].equals("1");
+            case 5:
+                if (!attributes[4].equals(""))
+                    this.roundsAfterDeath = Integer.parseInt(attributes[4]);
+            case 4:
+                if (!attributes[3].equals(""))
+                    this.attackSpeed = Integer.parseInt(attributes[3]);
+            case 3:
+                if (!attributes[2].equals(""))
+                    this.lives_orig = Integer.parseInt(attributes[2]);
+            case 2:
+                if (!attributes[1].equals(""))
+                    this.attack = Integer.parseInt(attributes[1]);
+        }
     }
 
     void reset() {

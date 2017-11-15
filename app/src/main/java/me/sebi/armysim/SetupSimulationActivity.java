@@ -106,9 +106,8 @@ public class SetupSimulationActivity extends Activity {
         Simulation sim = new Simulation(counter);
         //iterate through armystrings
         for (int i = 0; i < armies.length; i++) {
-            String armyString = armies[i];
             //create army with name and add to simulation
-            new Army(armyNames.get(i), sim, armyString);
+            new Army(armyNames.get(i), sim, armies[i]);
         }
         return sim;
     }
@@ -129,21 +128,29 @@ public class SetupSimulationActivity extends Activity {
     }
 
     void onCounterChanged() {
-        String text = getResources().getString(R.string.echo_total) + counter.total
-                + " " + getResources().getString(R.string.echo_ties) + counter.ties;
-        for (String armyName : armyNames)
-            text += " " + armyName + ": " + counter.armyWins.get(armyName);
+        StringBuilder text = new StringBuilder();
+        text.append(getResources().getString(R.string.echo_total));
+        text.append(counter.total);
+        text.append(" ");
+        text.append(getResources().getString(R.string.echo_ties));
+        text.append(counter.ties);
+        for (String armyName : armyNames) {
+            text.append(" ");
+            text.append(armyName);
+            text.append(": ");
+            text.append(counter.armyWins.get(armyName));
+        }
         tv_counter.setText(text);
     }
 }
 
 class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
 
-    private final Context context;
-    private final SetupSimulationActivity setupSimulationActivity;
-    private final Simulation sim;
     private final int iterations;
     private final long start;
+    private Context context;
+    private SetupSimulationActivity setupSimulationActivity;
+    private Simulation sim;
 
     SimulationAsyncTask(Context context, Simulation sim, int iterations) {
         this.start = System.currentTimeMillis();
@@ -193,7 +200,10 @@ class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
         super.onPostExecute(aVoid);
         long end = System.currentTimeMillis();
         setupSimulationActivity.echo(null,
-                        String.format(Locale.getDefault(), context.getString(R.string.echo_duration), end - start));
+                String.format(Locale.getDefault(), context.getString(R.string.echo_duration), end - start));
+        context = null;
+        setupSimulationActivity = null;
+        sim = null;
     }
 
     @Override
@@ -201,6 +211,9 @@ class SimulationAsyncTask extends AsyncTask<Void, String, Void> {
         super.onCancelled();
         long end = System.currentTimeMillis();
         setupSimulationActivity.echo(null,
-                        String.format(Locale.getDefault(), context.getString(R.string.echo_cancelled_duration), end - start));
+                String.format(Locale.getDefault(), context.getString(R.string.echo_cancelled_duration), end - start));
+        context = null;
+        setupSimulationActivity = null;
+        sim = null;
     }
 }

@@ -17,32 +17,28 @@ public class RowForListView {
     RowForListView(String rowString) {
         attack = lives = attackSpeed = roundsAfterDeath = defense = reach = "";
         String[] attributes = rowString.split(s);
-        if (attributes.length > 1) {
-            this.attack = attributes[1];
-            if (attributes.length > 2) {
+        int length = attributes.length;
+        if (length > 9)
+            length = 10;
+        switch (length) {
+            case 10:
+                this.reach = attributes[9];
+            case 9:
+                this.defense = attributes[8];
+            case 8:
+                this.DISTANCE_FIGHTER = attributes[7].equals("1");
+            case 7:
+                this.DISTANCE_DAMAGE = !attributes[6].equals("0");
+            case 6:
+                this.ATTACK_WEAKEST_ROW = attributes[5].equals("1");
+            case 5:
+                this.roundsAfterDeath = attributes[4];
+            case 4:
+                this.attackSpeed = attributes[3];
+            case 3:
                 this.lives = attributes[2];
-                if (attributes.length > 3) {
-                    this.attackSpeed = attributes[3];
-                    if (attributes.length > 4) {
-                        this.roundsAfterDeath = attributes[4];
-                        if (attributes.length > 5) {
-                            this.ATTACK_WEAKEST_ROW = (attributes[5].equals("1"));
-                            if (attributes.length > 6) {
-                                this.DISTANCE_DAMAGE = !(attributes[6].equals("0"));
-                                if (attributes.length > 7) {
-                                    this.DISTANCE_FIGHTER = (attributes[7].equals("1"));
-                                    if (attributes.length > 8) {
-                                        this.defense = attributes[8];
-                                        if (attributes.length > 9) {
-                                            this.reach = attributes[9];
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            case 2:
+                this.attack = attributes[1];
         }
     }
 
